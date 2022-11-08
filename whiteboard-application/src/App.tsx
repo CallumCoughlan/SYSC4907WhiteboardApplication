@@ -1,5 +1,5 @@
 import React from 'react';
-import WhiteboardLayout from './components/pages/whiteboardLayout';
+import WhiteboardLayout from './components/pages/Whiteboard/whiteboardLayout';
 
 const App = () => {
     return(

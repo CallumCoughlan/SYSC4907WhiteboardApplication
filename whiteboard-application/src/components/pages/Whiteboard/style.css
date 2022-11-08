@@ -1,0 +1,14 @@
+.whiteboard-container {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+}
+
+.drawing-section {
+    width: 90%;
+    height: 90%;
+    background-color: white;
+    margin: auto;
+    margin-top: 2%;
+}
