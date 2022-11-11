@@ -1,5 +1,6 @@
 import React from 'react';
-import Whiteboard from '../Whiteboard/whiteboard';
+import './style.css';
+import Whiteboard from '../../Whiteboard/whiteboard';
 
 class WhiteboardLayout extends React.Component {
 
