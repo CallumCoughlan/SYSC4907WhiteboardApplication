@@ -2,17 +2,29 @@ import React from 'react';
 import "./style.css"
 
 interface WhiteboardProps {
-
+    tool: string
 }
 
-class Whiteboard extends React.Component {
+class Whiteboard extends React.Component<WhiteboardProps> {
 
     constructor(props: WhiteboardProps) {
         super(props);
     }
 
     componentDidMount() {
+        console.log("pencil");
         this.drawWithMouse();
+    }
+
+    componentDidUpdate() {
+        if (this.props.tool === "pencil") {
+            console.log("pencil");
+            this.drawWithMouse();
+        } else if (this.props.tool === "rectangle") {
+            console.log("rectangle");
+        } else if (this.props.tool === "circle") {
+            console.log("circle");
+        }
     }
 
     drawWithMouse() {
