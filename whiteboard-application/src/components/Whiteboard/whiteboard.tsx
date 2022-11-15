@@ -1,33 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import "./style.css"
 
 interface WhiteboardProps {
     tool: string
 }
 
-class Whiteboard extends React.Component<WhiteboardProps> {
+function Whiteboard(props : WhiteboardProps) {
 
-    constructor(props: WhiteboardProps) {
-        super(props);
-    }
-
-    componentDidMount() {
-        console.log("pencil");
-        this.drawWithMouse();
-    }
-
-    componentDidUpdate() {
-        if (this.props.tool === "pencil") {
+    useEffect(() => {
+        if (props.tool === "pencil") {
             console.log("pencil");
-            this.drawWithMouse();
-        } else if (this.props.tool === "rectangle") {
+            drawWithMouse();
+        } else if (props.tool === "rectangle") {
             console.log("rectangle");
-        } else if (this.props.tool === "circle") {
+        } else if (props.tool === "circle") {
             console.log("circle");
         }
-    }
+    });
 
-    drawWithMouse() {
+    function drawWithMouse() {
         var canvas = document.getElementById('drawing-board') as HTMLCanvasElement;
         var context = canvas.getContext('2d');
 
@@ -75,13 +66,11 @@ class Whiteboard extends React.Component<WhiteboardProps> {
         };
     }
 
-    render() {
-        return (
-            <div className='canvas-style' id='canvas-style'>
-                <canvas className='drawing-board' id="drawing-board"></canvas>
-            </div>
-        )
-    }
+    return (
+        <div className='canvas-style' id='canvas-style'>
+            <canvas className='drawing-board' id="drawing-board"></canvas>
+        </div>
+    );
 }
 
 export default Whiteboard;
