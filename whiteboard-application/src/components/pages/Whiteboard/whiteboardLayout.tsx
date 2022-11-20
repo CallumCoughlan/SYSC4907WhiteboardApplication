@@ -8,7 +8,7 @@ function WhiteboardLayout() {
     function handleToolClick(tool: string) {
         var toolItem = document.getElementById(tool);
         if (toolItem != null) {
-            toolItem.style.backgroundColor = "lightgray";
+            toolItem.style.backgroundColor = "rgb(220,220,220)";
 
             if (tool != selectedTool) {
                 toolItem = document.getElementById(selectedTool);
