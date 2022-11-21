@@ -22,14 +22,18 @@ function WhiteboardLayout() {
     }
 
     return (
+        
         <div className="whiteboard-container">
+            <h1>selectedTool is {selectedTool}!</h1>
             <div className='toolbar'>
                 <div className="toolbar-item" id="pencil" onClick={() => handleToolClick("pencil")}></div>
                 <div className="toolbar-item" id="rectangle" onClick={() => handleToolClick("rectangle")}></div>
                 <div className="toolbar-item" id="circle" onClick={() => handleToolClick("circle")}></div>
             </div>
             <div className="drawing-section">
+                hello
                 <Whiteboard tool={selectedTool}></Whiteboard>
+                world
             </div>
         </div>
     );

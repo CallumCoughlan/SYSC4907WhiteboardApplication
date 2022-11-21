@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { fabric } from "fabric"
 import "./style.css"
 import { Color } from 'fabric/fabric-impl';
@@ -7,55 +7,88 @@ interface WhiteboardProps {
     tool: string
 }
 
+// cursorSize?: string
+// color?: string
+
+var firstIter = true;
+var whiteboardCanvas: fabric.Canvas;
+var ctx;
 const className = 'drawing-board';
 
+//function Whiteboard(props: WhiteboardProps) {
 function Whiteboard(props: WhiteboardProps) {
 
-    useEffect(() => {
-        const whiteboard = new fabric.Canvas(className, { isDrawingMode: true });
-        const ctx = whiteboard.getContext();
+    console.log('-------------------------------------');
+    console.log('GOT HERE 1 ' + props.tool);
+    
+    // const whiteboardRef = useRef(null);
+    // whiteboardRef.current.focus()
 
+    if(firstIter){
+        console.log('GOT HERE 2 ' + props.tool);
+        whiteboardCanvas = new fabric.Canvas('c', {isDrawingMode: true});
+
+        whiteboardCanvas.add(
+            new fabric.Rect({ top: 100, left: 100, width: 50, height: 50, fill: '#f55' }),
+            new fabric.Circle({ top: 140, left: 230, radius: 75, fill: 'green' }),
+            new fabric.Triangle({ top: 300, left: 210, width: 100, height: 100, fill: 'blue' })
+        );
+
+
+        ctx = whiteboardCanvas.getContext();
         fabric.Object.prototype.transparentCorners = false;
 
-        const drawingMode = document.getElementById('drawing-mode') as HTMLCanvasElement,
-            lineColor = 'red', //document.getElementById('drawing-color') as HTMLCanvasElement,
-            lineWidth = 5, //document.getElementById('drawing-line-width') as HTMLElement,
-            clear = document.getElementById('clear-canvas') as HTMLCanvasElement;
+        firstIter = false
+    }
 
-        clear.onclick = function() { whiteboard.clear() };
+    //const whiteboardCanvas = new fabric.Canvas(className, { isDrawingMode: true });
 
-        drawingMode.onclick = function() {
-            whiteboard.isDrawingMode = !whiteboard.isDrawingMode;
-            if (whiteboard.isDrawingMode) {
-                drawingMode.innerHTML = 'Selector Mode';
-            }
-            else {
-                drawingMode.innerHTML = 'Drawing Mode';
-            }
-        };
+    console.log(whiteboardCanvas)
 
-        if (whiteboard.freeDrawingBrush) {
-            whiteboard.freeDrawingBrush.color = lineColor;
-            whiteboard.freeDrawingBrush.width = lineWidth;
-        }
+    if(props.tool === 'pencil') {
+        console.log('running pencil code...');
+        whiteboardCanvas.isDrawingMode = true;
+        whiteboardCanvas.freeDrawingBrush.color = 'red';
+        whiteboardCanvas.freeDrawingBrush.width = 5;
 
-        /*
-        lineColor.onchange = function() {
-            let brush = whiteboard.freeDrawingBrush;
-            brush.color = lineColor;
-        };
-        */
 
-        /*
-        document.getElementById('tool-selector').onchange = function() {
+    } else if(props.tool === 'rectangle') {
+        console.log('running rectangle code...');
+        whiteboardCanvas.isDrawingMode = false;
 
-        }
-        */
-    });
+    } else if(props.tool === 'circle') {
+        console.log('running circle code...');
+        whiteboardCanvas.isDrawingMode = true;
+        whiteboardCanvas.freeDrawingBrush.color = 'blue';
+        whiteboardCanvas.freeDrawingBrush.width = 5;
 
+    }
+
+
+    whiteboardCanvas.renderAll();
+
+
+    // const color = 'red', //document.getElementById('drawing-color') as HTMLCanvasElement,
+    //     cursorSize = 5; //document.getElementById('drawing-line-width') as HTMLElement,
+    //     const [tool, setTool] = useState("");
+
+    // setTool(props.tool);
+
+    // //when hook for tool triggers
+
+    // if (tool === 'cursor') {
+    //     whiteboard.isDrawingMode = true;
+    //     whiteboard.freeDrawingBrush.color = color;
+    //     whiteboard.freeDrawingBrush.width = cursorSize;
+    // }
+
+    // //end of hook
+
+
+    //<canvas className={className} ref={whiteboardRef} id={className}></canvas>
     return (
         <div className='canvas-style' id='canvas-style'>
-                <canvas className={className} id={className}></canvas>
+                <canvas id="c" width="800" height="400"></canvas>
         </div>
     );
 }
