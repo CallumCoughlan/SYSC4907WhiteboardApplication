@@ -5,10 +5,47 @@
     background-color: black;
 }
 
+.toolbar {
+    height: 5%;
+    width: 90%;
+    margin: 2% auto;
+    background-color: white;
+}
+
+.toolbar-item {
+    box-sizing: border-box;
+    display: inline-block;
+    height: 100%;
+    width: 3%;
+    margin-right: 4px;
+    padding: 2px;
+}
+
+#pencil {
+    background-color: rgb(220, 220, 220);
+    background-image: url("../../../../images/pen.ico");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#rectangle {
+    background-image: url("../../../../images/rectangle.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#circle {
+    background-image: url("../../../../images/circle.webp");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
 .drawing-section {
     width: 90%;
     height: 90%;
     background-color: white;
     margin: auto;
-    margin-top: 2%;
 }
