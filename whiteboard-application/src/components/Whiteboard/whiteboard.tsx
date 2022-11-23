@@ -21,6 +21,11 @@ const Whiteboard: FC<WhiteboardProps> = memo(({ className, dispatch }) => {
       });
   
       dispatch({ type: "init", canvas: initCanvas });
+
+      return () => { 
+        initCanvas.dispose(); 
+        dispatch({ type: "dispose" }); 
+      }
     }, []);
   
     return (

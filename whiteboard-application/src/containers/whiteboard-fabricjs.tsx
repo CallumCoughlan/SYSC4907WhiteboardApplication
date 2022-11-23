@@ -24,7 +24,7 @@ const reducer: Reducer<State, Action> = (state, action) => {
         state.width = width;
         state.canvas.freeDrawingBrush.width = width;
       }
-      if (isDrawingMode) {
+      if (isDrawingMode !== undefined) {
         state.isDrawingMode = isDrawingMode;
         state.canvas.isDrawingMode = isDrawingMode;
       }
@@ -36,6 +36,10 @@ const reducer: Reducer<State, Action> = (state, action) => {
       }
       state.canvas.clear();
       state.canvas.backgroundColor = "#FFFFFF";
+      return state;
+    }
+    case "dispose": {
+      state.canvas = null;
       return state;
     }
   }

@@ -20,4 +20,7 @@ export type Action =
     }
   | {
       type: "clear";
+    }
+  | {
+      type: "dispose";
     };
