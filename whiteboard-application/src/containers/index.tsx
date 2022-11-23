@@ -1,0 +1,1 @@
+export { default as FabricCanvasContainer } from "./whiteboard-fabricjs";
