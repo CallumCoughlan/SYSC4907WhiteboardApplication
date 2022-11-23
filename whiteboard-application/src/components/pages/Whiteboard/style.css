@@ -2,7 +2,46 @@
     position: fixed;
     width: 100%;
     height: 100%;
-    background-color: black;
+    background-color: grey;
+}
+
+.toolbar {
+    height: 5%;
+    width: 90%;
+    margin: 2% auto;
+    background-color: white;
+}
+
+.toolbar-item {
+    box-sizing: border-box;
+    display: inline-block;
+    height: calc(100% - 4px);
+    width: 5%;
+    padding: 2px;
+    margin: 2px;
+    border: black 1px solid;
+}
+
+#pencil {
+    background-color: lightgray;
+    background-image: url("../../../pencil.svg.png");
+    background-size: 70% 70%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#rectangle {
+    background-image: url("../../../rectangle.svg");
+    background-size: 70% 70%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#circle {
+    background-image: url("../../../circle.svg.png");
+    background-size: 70% 70%;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .toolbar {
