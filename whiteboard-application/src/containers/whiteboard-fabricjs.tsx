@@ -50,7 +50,8 @@ const Hooks = () => {
     canvas: null,
     width: 5,
     color: "#000000",
-    isDrawingMode: true
+    isDrawingMode: true,
+    tool: "pencil"
   });
 
   return { canvas, color, width, isDrawingMode, dispatch };

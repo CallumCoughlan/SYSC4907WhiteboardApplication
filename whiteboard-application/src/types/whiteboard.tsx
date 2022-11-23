@@ -5,6 +5,7 @@ export type State = {
   isDrawingMode: boolean,
   width: number;
   color: string;
+  tool: string;
 };
 
 export type Action =
@@ -17,6 +18,7 @@ export type Action =
       color?: string;
       width?: number;
       isDrawingMode?: boolean;
+      tool?: string;
     }
   | {
       type: "clear";
