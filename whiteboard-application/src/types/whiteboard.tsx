@@ -5,6 +5,7 @@ export type State = {
   isDrawingMode: boolean,
   width: number;
   color: string;
+  toolType: string;
 };
 
 export type Action =
@@ -13,13 +14,29 @@ export type Action =
       canvas: fabric.Canvas;
     }
   | {
-      type: "update";
-      color?: string;
-      width?: number;
+      type: "cursor";
       isDrawingMode?: boolean;
     }
   | {
-      type: "clear";
+      type: "pencil";
+      isDrawingMode?: boolean;
+  }
+  | {
+      type: "circle";
+  }
+  | {
+      type: "rectangle";
+  }
+  | {
+      type: "setWidth";
+      width?: number;
+  }
+  | {
+      type: "setColor";
+      color?: string;
+  }
+  | {
+        type: "clear";
     }
   | {
       type: "dispose";

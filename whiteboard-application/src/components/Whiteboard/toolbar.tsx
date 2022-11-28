@@ -1,7 +1,9 @@
-import {Dispatch, FC, memo} from 'react';
+import {Dispatch, FC, memo, useState, useCallback} from 'react';
 import './style.css';
 import { Action } from '../../types/whiteboard';
-import { Button } from '@mui/material';
+import { ToggleButtonGroup } from '@mui/material';
+import { ToggleButton } from '@mui/material';
+import * as React from 'react';
 import { FabricCanvasContainer } from '../../containers';
 
 type WhiteboardProps = {
@@ -10,29 +12,41 @@ type WhiteboardProps = {
   };
   
   const ToolBar: FC<WhiteboardProps> = memo(({ className, dispatch }) => {
+    const onClickCursor = () => dispatch({ type: "cursor", isDrawingMode: false });
+    const onClickPencil = () => dispatch({ type: "pencil", isDrawingMode: true });
+    const onClickCircle = () => dispatch({ type: "circle" });
+    const onClickRectangle = () => dispatch({ type: "rectangle"});
+    const onSetWidth = () => dispatch({ type: "setWidth", width: 5 });
+    const onSetColor = () => dispatch({ type: "setColor", color: '#FF0000' });
     const onClickClear = () => dispatch({ type: "clear" });
-    const onClickCursor = () => dispatch({ type: "update", isDrawingMode: false });
-    const onClickPencil = () => dispatch({ type: "update", color: '#000000', width: 5, isDrawingMode: true });
-    const onClickCircle = () => dispatch({ type: "update", color: '#FF0000', width: 5, isDrawingMode: true });
-    const onClickRectangle = () => dispatch({ type: "update", color: '#0000FF', width: 5, isDrawingMode: true });
+
+    const [alignment, setAlignment] = React.useState('Pencil');
+    const handleChange = (
+      event: React.MouseEvent<HTMLElement>,
+      newAlignment: string,
+    ) => {
+      setAlignment(newAlignment);
+    };
   
     return (
-      <div className={className}>
-        <Button variant="contained" color="primary" onClick={onClickCursor}>
-          Cursor
-        </Button>
-        <Button variant="contained" color="primary" onClick={onClickPencil}>
-          Pencil
-        </Button>
-        <Button variant="contained" color="primary" onClick={onClickCircle}>
-          Circle
-        </Button>
-        <Button variant="contained" color="primary" onClick={onClickRectangle}>
-          Square
-        </Button>
-        <Button variant="contained" color="primary" onClick={onClickClear}>
-          Clear
-        </Button>
+      <div className="toolbar">
+
+        <ToggleButtonGroup
+          color="primary"
+          value={alignment}
+          exclusive
+          onChange={handleChange}
+          aria-label="Platform"
+        >
+          <ToggleButton value="Cursor" onClick={onClickCursor}>Cursor</ToggleButton>
+          <ToggleButton value="Pencil" onClick={onClickPencil}>Pencil</ToggleButton>
+          <ToggleButton value="Circle" onClick={onClickCircle}>Circle</ToggleButton>
+          <ToggleButton value="Rectangle" onClick={onClickRectangle}>Rectangle</ToggleButton>
+          <ToggleButton value="Width" onClick={onSetWidth}>TODO WIDTH</ToggleButton>
+          <ToggleButton value="Color" onClick={onSetColor}>TODO COLOR</ToggleButton>
+          <ToggleButton value="Clear" onClick={onClickClear}>clear</ToggleButton>
+        </ToggleButtonGroup>
+
       </div>
     );
   });
