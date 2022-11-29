@@ -5,53 +5,50 @@ type Message = {
   text: String;
 }
 
-interface FormProps {
-  messages?: Message[];
+interface SubmitProps {
   onSubmitMessage: (submitMessage: Message) => void;
 }
 
-const MessageForm = (props: FormProps): ReactElement => {
-  //const [newMessage, setNewMessage] = useState<Message>({text: ""});
+const MessageForm = (props: SubmitProps): ReactElement => {
+  const [newMessage, setNewMessage] = useState({text: ""});  
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (event.currentTarget.value != "") {
-      props.onSubmitMessage(event.currentTarget.value);
+    event.preventDefault();
+    
+    if (newMessage.text != "") {
+      props.onSubmitMessage(newMessage);
+      setNewMessage({text: ""});
     }
   }
-
-  /*const handleChange = (event : Message) => {
-    setNewMessage(event);
-  }*/
 
   return (
     <div className="message-form">
       <form onSubmit={handleSubmit}>
         <input
+            id="message-field"
             name="message-field"
             placeholder="Send a message"
-            //onChange={handleChange}
-            //ref={node => (setNewMessage({text: node!.value}))} 
+            type="text"
+            onChange={event => setNewMessage({text: event.target.value})}
+            value={newMessage.text}
         />
       </form>
     </div>
   )
 }
 
-interface IProps {
-  messages?: Message[]
+interface MessageProps {
+  messages: Message[]
 }
 
-const MessageBox = (props: IProps): ReactElement => {
-
-  /*componentDidUpdate = () => {
-    if (this.props.messagesList != prevProps.messagesList) {
-      this.messageListEnd.scrollIntoView({ behavior: "smooth" });
-    }
-  }*/
+const MessageBox = (props: MessageProps): ReactElement => {
+  const messagesList = props.messages.map((message, index) =>
+    <li key={index}>{message.text}</li>
+  )
 
   return (
     <div>
-        
+      <ul>{messagesList}</ul>
     </div>
   )
 }
@@ -63,7 +60,6 @@ const MessageWindow = (): ReactElement => {
     <div>
       <MessageBox messages={messages} />
       <MessageForm 
-        messages={messages}
         onSubmitMessage={(newMessage: Message) => {
           setMessages(current=> [...current, newMessage])
         }}
