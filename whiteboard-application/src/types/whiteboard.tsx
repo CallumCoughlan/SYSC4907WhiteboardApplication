@@ -16,16 +16,20 @@ export type Action =
   | {
       type: "cursor";
       isDrawingMode?: boolean;
+      toolType?: string;
     }
   | {
       type: "pencil";
       isDrawingMode?: boolean;
+      toolType?: string;
   }
   | {
       type: "circle";
+      toolType?: string;
   }
   | {
       type: "rectangle";
+      toolType?: string;
   }
   | {
       type: "setWidth";
