@@ -24,14 +24,11 @@ const reducer: Reducer<State, Action> = (state, action) => {
       action.canvas.freeDrawingBrush.width = state.width;
       action.canvas.freeDrawingBrush.color = state.color;
       action.canvas.isDrawingMode = true;
-      action.canvas.setBackgroundImage('https://i.stack.imgur.com/f6vGv.png', action.canvas.renderAll.bind(action.canvas), {
-        left: 10,
-        top: 10,
-        width: action.canvas.width,
-        height: action.canvas.height,
-        originX: 'left',
-        originY: 'top'
-      });
+      fabric.Image.fromURL('https://i.stack.imgur.com/f6vGv.png', function(canvasBackground) {
+        canvasBackground.scaleToWidth(1500);
+        action.canvas.setBackgroundImage(canvasBackground, action.canvas.renderAll.bind(action.canvas));
+        action.canvas.requestRenderAll();
+     });
 
       return { ...state, canvas: action.canvas };
     }
@@ -331,6 +328,16 @@ const reducer: Reducer<State, Action> = (state, action) => {
         originX: 'left',
         originY: 'top'
       });
+
+      fabric.Image.fromURL('https://i.stack.imgur.com/f6vGv.png', function(canvasBackground) {
+        if (!state.canvas) {
+          return state;
+        }
+
+        canvasBackground.scaleToWidth(1500);
+        state.canvas.setBackgroundImage(canvasBackground, state.canvas.renderAll.bind(state.canvas));
+        state.canvas.requestRenderAll();
+     });
 
       return state;
     }
