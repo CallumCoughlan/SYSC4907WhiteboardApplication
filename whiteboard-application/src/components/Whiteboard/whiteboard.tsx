@@ -15,8 +15,8 @@ const Whiteboard: FC<WhiteboardProps> = memo(({ className, dispatch }) => {
     useEffect(() => {
       const initCanvas = new fabric.Canvas(whiteboard_id, {
         isDrawingMode: true,
-        width: 1750,
-        height: 600,
+        width: 1500,
+        height: 750,
         backgroundColor: "#FFFFFF"
       });
   
