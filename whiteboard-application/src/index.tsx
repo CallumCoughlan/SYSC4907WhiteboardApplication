@@ -15,8 +15,6 @@ import { createRoot } from "react-dom/client";
 const rootElement = document.getElementById("root") as HTMLElement;
 const root = createRoot(rootElement);
 
-console.log('got here 3')
-
 root.render(
   <StrictMode>
     <App />

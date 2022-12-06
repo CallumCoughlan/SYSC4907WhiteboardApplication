@@ -16,16 +16,28 @@ export type Action =
   | {
       type: "cursor";
       isDrawingMode?: boolean;
+      toolType?: string;
     }
   | {
       type: "pencil";
       isDrawingMode?: boolean;
+      toolType?: string;
+  }
+  | {
+    type: "line";
+    toolType?: string;
+  }
+  | {
+    type: "arrow";
+    toolType?: string;
   }
   | {
       type: "circle";
+      toolType?: string;
   }
   | {
       type: "rectangle";
+      toolType?: string;
   }
   | {
       type: "setWidth";
@@ -36,7 +48,7 @@ export type Action =
       color?: string;
   }
   | {
-        type: "clear";
+      type: "clear";
     }
   | {
       type: "dispose";
