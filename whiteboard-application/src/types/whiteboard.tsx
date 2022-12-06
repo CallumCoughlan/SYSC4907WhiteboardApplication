@@ -24,6 +24,14 @@ export type Action =
       toolType?: string;
   }
   | {
+    type: "line";
+    toolType?: string;
+  }
+  | {
+    type: "arrow";
+    toolType?: string;
+  }
+  | {
       type: "circle";
       toolType?: string;
   }
@@ -40,7 +48,7 @@ export type Action =
       color?: string;
   }
   | {
-        type: "clear";
+      type: "clear";
     }
   | {
       type: "dispose";
