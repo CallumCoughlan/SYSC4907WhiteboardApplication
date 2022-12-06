@@ -1,13 +1,16 @@
 import { FC } from 'react';
 
+import Box from '@mui/material/Box';
 import { FabricCanvasContainer } from '../../../containers';
 import { Whiteboard, Toolbar, MessageWindow } from '../../Whiteboard';
 
 const WhiteboardLayout: FC = () => (
   <FabricCanvasContainer.Provider>
     <Toolbar />
-    <Whiteboard />
-    <MessageWindow />
+    <Box display="flex">
+      <Whiteboard />
+      <MessageWindow />
+    </Box>
   </FabricCanvasContainer.Provider>
 );
 
