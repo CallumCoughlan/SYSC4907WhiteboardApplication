@@ -10,10 +10,6 @@ import { BrowserRouter as Router, Routes, Route,} from "react-router-dom";
 
 
 const WhiteboardLayout: FC = () => (
-  // <FabricCanvasContainer.Provider>
-  //   <Toolbar />
-  //   <Whiteboard />
-  // </FabricCanvasContainer.Provider>
   <Router>
     <div className="App">
         <div className="container d-flex align-items-center flex-column">
@@ -23,7 +19,10 @@ const WhiteboardLayout: FC = () => (
             <Route path="/whiteboard" element={
               <FabricCanvasContainer.Provider>
                 <Toolbar />
-                <Whiteboard />
+                <Box display="flex">
+                  <Whiteboard />
+                  <MessageWindow />
+                </Box>
               </FabricCanvasContainer.Provider>}/>
           </Routes>
         </div>
