@@ -5,83 +5,6 @@
     background-color: grey;
 }
 
-.toolbar {
-    height: 5%;
-    width: 90%;
-    margin: 2% auto;
-    background-color: white;
-}
-
-.toolbar-item {
-    box-sizing: border-box;
-    display: inline-block;
-    height: calc(100% - 4px);
-    width: 5%;
-    padding: 2px;
-    margin: 2px;
-    border: black 1px solid;
-}
-
-#pencil {
-    background-color: lightgray;
-    background-image: url("../../../pencil.svg.png");
-    background-size: 70% 70%;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-#rectangle {
-    background-image: url("../../../rectangle.svg");
-    background-size: 70% 70%;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-#circle {
-    background-image: url("../../../circle.svg.png");
-    background-size: 70% 70%;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-.toolbar {
-    height: 5%;
-    width: 90%;
-    margin: 2% auto;
-    background-color: white;
-}
-
-.toolbar-item {
-    box-sizing: border-box;
-    display: inline-block;
-    height: 100%;
-    width: 3%;
-    margin-right: 4px;
-    padding: 2px;
-}
-
-#pencil {
-    background-color: rgb(220, 220, 220);
-    background-image: url("../../../../images/pen.ico");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-#rectangle {
-    background-image: url("../../../../images/rectangle.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-#circle {
-    background-image: url("../../../../images/circle.webp");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
 .drawing-section {
     width: 90%;
     height: 90%;
@@ -95,7 +18,7 @@
     align-items: center;
     height: 100vh;
     background-image: url('../../../../images/bgImg.jpg');
-    background-position-y: 70%;
+    background-position-y: 60%;
     background-position-x: 50%;
     /* background-position: center; */
     background-size: cover;
