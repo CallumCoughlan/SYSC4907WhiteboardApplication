@@ -1,0 +1,84 @@
+.header {
+    width: 80%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.view-toggle {
+    margin: auto;
+}
+
+.view-toggle-item {
+    display: inline;
+    padding: 8px;
+}
+
+.request-session-button {
+    margin: auto 0px auto auto;
+    padding: 8px;
+    background-color: lightblue;
+}
+
+.calendar {
+    width: 80%;
+    margin: auto;
+}
+
+.calendar-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: black 1px solid;
+    border-right: black 1px solid;
+    border-left: black 1px solid;
+}
+
+.calendar-navigation {
+    width: 30%;
+    margin: auto 0px auto auto;
+}
+
+.calendar-navigation-item {
+    display: inline;
+    padding: 8px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    border-top: black 1px solid;
+    border-left: black 1px solid;
+}
+
+.day {
+    height: 80px;
+    border-bottom: black 1px solid;
+    border-right: black 1px solid;
+}
+
+.day.other-month {
+    height: 80px;
+    background-color: rgb(230, 230, 230);
+    border-bottom: black 1px solid;
+    border-right: black 1px solid;
+}
+
+.day.current {
+    height: 80px;
+    background-color: rgb(225, 245, 225);
+    border-bottom: black 1px solid;
+    border-right: black 1px solid;
+}
+
+.day.week {
+    height: 400px;
+    border-bottom: black 1px solid;
+    border-right: black 1px solid;
+}
+
+.day.week.current {
+    height: 400px;
+    background-color: rgb(225, 245, 225);
+    border-bottom: black 1px solid;
+    border-right: black 1px solid;
+}

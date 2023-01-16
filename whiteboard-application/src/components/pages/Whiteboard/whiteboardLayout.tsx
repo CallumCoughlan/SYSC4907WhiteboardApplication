@@ -7,6 +7,7 @@ import { Whiteboard, Toolbar, MessageWindow } from '../../Whiteboard';
 import LoginForm from './loginForm';
 import RegisterForm from './registrationForm';
 import { BrowserRouter as Router, Routes, Route,} from "react-router-dom";
+import Calendar from '../../Calendar/calendar';
 
 
 const WhiteboardLayout: FC = () => (
