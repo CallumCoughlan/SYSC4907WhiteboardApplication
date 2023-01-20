@@ -8,6 +8,7 @@ import LoginForm from './loginForm';
 import RegisterForm from './registrationForm';
 import { BrowserRouter as Router, Routes, Route,} from "react-router-dom";
 import Calendar from '../../Calendar/calendar';
+import RequestSession from '../Scheduler/requestSession';
 
 
 const WhiteboardLayout: FC = () => (
@@ -17,6 +18,8 @@ const WhiteboardLayout: FC = () => (
           <Routes>
             <Route path="/" element={<LoginForm/>}/>
             <Route path="/register" element={<RegisterForm/>}/>
+            <Route path='/home' element={<Calendar/>}/>
+            <Route path='/request-session' element={<RequestSession/>}/>
             <Route path="/whiteboard" element={
               <FabricCanvasContainer.Provider>
                 <Toolbar />

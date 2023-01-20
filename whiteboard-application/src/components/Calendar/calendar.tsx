@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from 'react';
+import { Link } from "react-router-dom";
 
 import './style.css'
 
@@ -252,7 +253,11 @@ const Calendar: FC = () => {
                     <div className='view-toggle-item' onClick={changeToWeekView}>Week</div>
                     <div className='view-toggle-item' onClick={changeToMonthView}>Month</div>
                 </div>
-                <div className='request-session-button' onClick={handleClick}>Request a Session</div>
+                <div className='header-top-right'>
+                    <Link to="/request-session">
+                        <button className='request-session-button' onClick={handleClick}>Request a Session</button>
+                    </Link>
+                </div>
             </div>
             <div className='calendar'>
                 <div className='calendar-header'>
@@ -308,6 +313,7 @@ const Calendar: FC = () => {
                     }
                 </div>
             </div>
+            <Link to='/whiteboard'>Whiteboard</Link>
         </>
     );
 };

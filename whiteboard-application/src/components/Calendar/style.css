@@ -14,8 +14,11 @@
     padding: 8px;
 }
 
-.request-session-button {
+.header-top-right {
     margin: auto 0px auto auto;
+}
+
+.request-session-button {
     padding: 8px;
     background-color: lightblue;
 }

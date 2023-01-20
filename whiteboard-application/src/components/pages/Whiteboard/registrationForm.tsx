@@ -17,7 +17,7 @@ function registrationForm() {
                         {/* <label> Confirm Password </label> */}
                         <input type='text' className='form-control' placeholder='Confirm Password'></input>
                     </div>
-                    <Link to="/whiteboard">
+                    <Link to="/home">
                         <button className='primaryButton' type='submit'> Register </button>
                     </Link>
                 </form>
