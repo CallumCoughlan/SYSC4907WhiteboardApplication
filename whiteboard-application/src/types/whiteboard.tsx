@@ -51,5 +51,8 @@ export type Action =
       type: "clear";
     }
   | {
+      type: "delete";
+    }
+  | {
       type: "dispose";
     };

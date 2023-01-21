@@ -2,7 +2,7 @@ import {Dispatch, FC, memo, useState, useCallback} from 'react';
 import './style.css';
 import { Action } from '../../types/whiteboard';
 import { ToggleButtonGroup } from '@mui/material';
-import { ToggleButton } from '@mui/material';
+import { ToggleButton, Button } from '@mui/material';
 import { FormControl } from '@mui/material';
 import { Select } from '@mui/material';
 import { MenuItem } from '@mui/material';
@@ -24,6 +24,14 @@ type WhiteboardProps = {
     const onClickRectangle = () => dispatch({ type: "rectangle", toolType: "rectangle"});
     const onSetColor = () => dispatch({ type: "setColor", color: '#FF0000' });
     const onClickClear = () => dispatch({ type: "clear" });
+    const onClickDelete = () => dispatch({ type: "delete" });
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Delete") {
+        dispatch({ type: "delete" });
+      }
+    }
+
+    document.addEventListener("keydown", onKeyDown, false);
 
     //toggle button group
     const [alignment, setAlignment] = React.useState('Pencil');
@@ -62,6 +70,8 @@ type WhiteboardProps = {
           <ToggleButton value="Color" onClick={onSetColor}>TODO COLOR</ToggleButton>
           <ToggleButton value="Clear" onClick={onClickClear}>clear</ToggleButton>
         </ToggleButtonGroup>
+
+        <Button id="delete-button" value="Delete" onClick={onClickDelete}>Delete</Button>
 
         <FormControl>
           <Select value={selected} onChange={selectionChangeHandler}>

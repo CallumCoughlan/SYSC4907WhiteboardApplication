@@ -53,6 +53,9 @@ const reducer: Reducer<State, Action> = (state, action) => {
       // //remove any previous listeners
       state.canvas.off('mouse:down').off('mouse:move').off('mouse:up');
 
+      //add object selection listeners
+      addSelectionListeners(state);
+
       //re-enable object selection
       const allObjects = state.canvas.getObjects();
       allObjects.forEach((object) => {
@@ -343,7 +346,28 @@ const reducer: Reducer<State, Action> = (state, action) => {
     }
 
     //======================================
-    //           Case 11 dispose
+    //           Case 11 delete
+    //======================================
+    case "delete": {
+      console.log("---------------------------------");
+      console.log("delete");
+
+      if (!state.canvas) {
+        return state;
+      }
+
+      //get all selected objects and remove them from the canvas
+      const allActiveObjects = state.canvas.getActiveObjects();
+      allActiveObjects.forEach((object) => {
+        state.canvas?.remove(object);
+      });
+      state.canvas.discardActiveObject().renderAll();
+
+      return state;
+    }
+
+    //======================================
+    //           Case 12 dispose
     //======================================
     case "dispose": {
       state.canvas = null;
@@ -351,6 +375,25 @@ const reducer: Reducer<State, Action> = (state, action) => {
     }
   }
 };
+
+// adds object selection listeners to canvas that control display of delete button
+function addSelectionListeners(state: State) {
+  if (!state.canvas) {
+    return state;
+  }
+
+  //when an object on the canvas is selected, display the delete button
+  state.canvas.on("selection:created", function() {
+    var deleteButton = document.getElementById("delete-button");
+    if (deleteButton) { deleteButton.style.display = "inline"};
+  });
+
+  //when the selection of an object ends, hide the delete button
+  state.canvas.on("selection:cleared", function() {
+    var deleteButton = document.getElementById("delete-button");
+    if (deleteButton) { deleteButton.style.display = "none"};
+  });
+}
 
 // adds mouse listeners to canvas that add lines
 // state contains width for lines
