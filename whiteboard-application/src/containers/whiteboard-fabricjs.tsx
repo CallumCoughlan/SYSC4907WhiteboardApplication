@@ -245,7 +245,41 @@ const reducer: Reducer<State, Action> = (state, action) => {
     }
 
     //======================================
-    //           Case 8 set width
+    //            Case 8 textbox
+    //======================================
+    case "textbox": {
+      console.log("---------------------------------");
+      console.log("textbox");
+      if (!state.canvas) {
+        return state;
+      }
+
+      //update state toolType
+      const { toolType } = action;
+      if (toolType !== undefined) {
+        state.toolType = toolType;
+      }
+
+      //remove any previous listeners
+      state.canvas.off('mouse:down').off('mouse:move').off('mouse:up');
+
+      //re-enable object selection
+      const allObjects = state.canvas.getObjects();
+      allObjects.forEach((object) => {
+        object.selectable = true
+      });
+
+      //get out of drawing mode
+      state.canvas.isDrawingMode = false;
+
+      //add rectangle mouse listeners
+      addTextBoxMouseListeners(state)
+
+      return { ...state };
+    }
+
+    //======================================
+    //           Case 9 set width
     //======================================
     case "setWidth": {
       console.log("---------------------------------");
@@ -286,7 +320,7 @@ const reducer: Reducer<State, Action> = (state, action) => {
     }
 
     //======================================
-    //          Case 9 set color
+    //          Case 10 set color
     //======================================
     case "setColor": {
       console.log("---------------------------------");
@@ -304,7 +338,7 @@ const reducer: Reducer<State, Action> = (state, action) => {
     }
 
     //======================================
-    //           Case 10 clear
+    //           Case 11 clear
     //======================================
     case "clear": {
       console.log("---------------------------------");
@@ -717,6 +751,78 @@ function addRectangleMouseListeners(state: State) {
 
     rect.set({ width: Math.abs(origX - pointer.x) });
     rect.set({ height: Math.abs(origY - pointer.y) });
+
+    state.canvas.renderAll();
+  });
+
+  state.canvas.on('mouse:up', function (o) {
+    if (!state.canvas) {
+      return state;
+    }
+    isDown = false;
+    state.canvas.discardActiveObject();
+    //state.canvas.selection = true;
+
+    //todo, send the new recangle to the server???
+  });
+}
+
+// adds mouse listeners to canvas that add rectangles
+// state contains width and color for rectangles
+function addTextBoxMouseListeners(state: State) {
+  if (!state.canvas) {
+    return state;
+  }
+
+  var textbox: fabric.Textbox;
+  var isDown = false;
+  var origX = 0;
+  var origY = 0;
+
+  state.canvas.on('mouse:down', function (o) {
+    if (!state.canvas) {
+      return state;
+    }
+
+    //temporarily disable object selection
+    const allObjects = state.canvas.getObjects();
+    allObjects.forEach((object) => {
+      object.selectable = false
+    });
+
+    isDown = true;
+    var pointer = state.canvas.getPointer(o.e);
+    origX = pointer.x;
+    origY = pointer.y;
+
+    textbox = new fabric.Textbox(
+      "", {
+        selectable: true,
+        evented: true,
+        editable: true,
+        width: 450,
+        height: 400
+      }
+    );
+
+    state.canvas.add(textbox);
+  });
+
+  state.canvas.on('mouse:move', function (o) {
+    if (!state.canvas) {
+      return state;
+    }
+
+    if (!isDown) return;
+    var pointer = state.canvas.getPointer(o.e);
+
+      textbox.set({ left: pointer.x });
+    
+      textbox.set({ top: pointer.y });
+    
+
+    // textbox.set({ width: Math.abs(origX - pointer.x) });
+    // textbox.set({ height: Math.abs(origY - pointer.y) });
 
     state.canvas.renderAll();
   });
