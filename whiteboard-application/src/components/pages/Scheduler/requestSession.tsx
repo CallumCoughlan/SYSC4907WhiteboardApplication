@@ -3,7 +3,11 @@ import { Link } from 'react-router-dom';
 
 import './style.css'
 
-const RequestSession: FC = () => {
+type RequestSessionProps = {
+    role: String;
+};
+
+const RequestSession: FC<RequestSessionProps> = (props) => {
     const [date, setDate] = useState("");
     const [startTime, setStartTime] = useState("");
     const [endTime, setEndTime] = useState("");
@@ -11,7 +15,7 @@ const RequestSession: FC = () => {
 
     return (
         <form>
-            <h1 className='form-title'>Request a Session</h1>
+            <h1 className='form-title'>{props.role === "student" ? "Request a Session" : "Create a Session"}</h1>
             <div className='form-container'>
                 <label htmlFor="date-input">Select a date:</label>
                 <input type="date" id="date-input" value={date} className="form-item" onChange={(e)=>setDate(e.target.value)}/>

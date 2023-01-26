@@ -18,8 +18,9 @@ const WhiteboardLayout: FC = () => (
           <Routes>
             <Route path="/" element={<LoginForm/>}/>
             <Route path="/register" element={<RegisterForm/>}/>
-            <Route path='/home' element={<Calendar/>}/>
-            <Route path='/request-session' element={<RequestSession/>}/>
+            <Route path='/home' element={<Calendar role="scholar"/>}/>
+            <Route path='/request-session' element={<RequestSession role="student"/>}/>
+            <Route path='/create-session' element={<RequestSession role="scholar"/>}/>
             <Route path="/whiteboard" element={
               <FabricCanvasContainer.Provider>
                 <Toolbar />

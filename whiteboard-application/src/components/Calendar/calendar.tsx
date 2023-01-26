@@ -3,7 +3,11 @@ import { Link } from "react-router-dom";
 
 import './style.css'
 
-const Calendar: FC = () => {
+type CalendarProps = {
+    role: String;
+};
+
+const Calendar: FC<CalendarProps> = (props) => {
     const [dates, setDates] = useState(new Map<number, number[][]>());
     const [weekViewSelected, setWeekViewSelected] = useState(false);
     const [currentMonth, setCurrentMonth] = useState(0);
@@ -254,8 +258,8 @@ const Calendar: FC = () => {
                     <div className='view-toggle-item' onClick={changeToMonthView}>Month</div>
                 </div>
                 <div className='header-top-right'>
-                    <Link to="/request-session">
-                        <button className='request-session-button' onClick={handleClick}>Request a Session</button>
+                    <Link to={props.role === "student" ? "/request-session" : "/create-session"}>
+                        <button className='request-session-button' onClick={handleClick}>{props.role === "student" ? "Request a Session" : "Create a Session"}</button>
                     </Link>
                 </div>
             </div>
@@ -313,7 +317,6 @@ const Calendar: FC = () => {
                     }
                 </div>
             </div>
-            <Link to='/whiteboard'>Whiteboard</Link>
         </>
     );
 };
