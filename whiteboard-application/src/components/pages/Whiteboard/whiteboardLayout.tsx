@@ -6,6 +6,10 @@ import { Whiteboard, Toolbar, MessageWindow } from '../../Whiteboard';
 
 import LoginForm from './loginForm';
 import RegisterForm from './registrationForm';
+import AdminForm from './adminForm';
+import AdminAssignSess from './adminAssignSess';
+import AdminScholarList from './adminScholarList';
+import AdminStudentList from './adminStudentList';
 import { BrowserRouter as Router, Routes, Route,} from "react-router-dom";
 import Calendar from '../../Calendar/calendar';
 import RequestSession from '../Scheduler/requestSession';
@@ -21,6 +25,10 @@ const WhiteboardLayout: FC = () => (
             <Route path='/home' element={<Calendar role="scholar"/>}/>
             <Route path='/request-session' element={<RequestSession role="student"/>}/>
             <Route path='/create-session' element={<RequestSession role="scholar"/>}/>
+            <Route path="/adminPage" element={<AdminForm/>}/>
+            <Route path="/adminAssignSessions" element={<AdminAssignSess/>}/>
+            <Route path="/adminScholarList" element={<AdminScholarList/>}/>
+            <Route path="/adminStudentList" element={<AdminStudentList/>}/>
             <Route path="/whiteboard" element={
               <FabricCanvasContainer.Provider>
                 <Toolbar />

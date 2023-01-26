@@ -79,7 +79,7 @@
 
 .primaryButton {
     /* background-color: rgb(46, 29, 201); */
-    background-color: rgb(62, 47, 194);
+    background-color: #e02d34;
     /* margin-top: 30px; */
     border-radius: 5px;
     border: none;
@@ -96,7 +96,7 @@
     /* background-color: aquamarine; */
     border-radius: 5px;
     border: none;
-    color: rgb(62, 47, 194);
+    color: #e02d34;
     cursor: pointer;
     font-family: 'Open Sans', sans-serif;
     font-size: 14px;
@@ -107,9 +107,124 @@
 }
 
 .primaryButton:hover {
-    background: rgb(38, 24, 165);
+    background: #d1232a;
 }
 
 .secondayButton:hover {
     background: #f1f0f0;
+}
+
+.backimg{
+    background-image: url('../../../../images/bgImg.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    height: 100vh;
+    width: 100%;
+}
+
+.wrapper .sidebar {
+    background: #e02d34;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 225px;
+    height: 100%;
+    padding: 20px 0;
+    transition: all 0.5s ease;
+}
+
+.wrapper .sidebar ul li {
+    display: block;
+    padding: 13px 30px;
+    border-bottom: 1px solid #e02d34;
+    color: rgb(255, 255, 255);
+    font-size: 18px;
+    font-weight: 600;
+    position: relative;
+}
+
+/* .wrapper .sidebar ul li a .icon {
+    color: #dee4ec;
+    width: 30px;
+    display: inline-block;
+} */
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.wrapper .sidebar ul li:hover {
+    background:#bb2228;
+
+}
+
+.wrapper .mainMenu {
+    width: calc(100%-250px);
+    margin-left: 250px;
+    display: flex;
+    align-items: center;
+    padding: 20px 0px;
+}
+
+.wrapper .sidebar .cuLogo{
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.wrapper .sidebar .cuLogo img{
+    display: block;
+    margin: 0 auto;
+    width: 50%;
+    height: 50%;
+}
+
+.wrapper .sidebar .cuLogo h2{
+    color: #ffffff;
+    margin: 10px 0 5px;
+}
+
+.wrapper .logout {
+    position: absolute;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    border-radius: 8px;
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.col1 {
+    text-align: center;
+    width: 500px;
+    height: 40px;
+}
+
+.col2 {
+    text-align: center;
+    width: 200px;
+    height: 40px;
+}
+
+.col3 {
+    text-align: center;
+    width: 200px;
+    height: 40px;
+}
+
+.col4 {
+    text-align: center;
+    width: 200px;
+    height: 40px;
+}
+
+.col5 {
+    text-align: center;
+    width: 200px;
+    height: 40px;
 }

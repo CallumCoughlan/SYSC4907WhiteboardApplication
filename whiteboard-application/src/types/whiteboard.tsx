@@ -40,6 +40,10 @@ export type Action =
       toolType?: string;
   }
   | {
+    type: "textbox";
+    toolType?: string;
+  }
+  | {
       type: "setWidth";
       width?: number;
   }

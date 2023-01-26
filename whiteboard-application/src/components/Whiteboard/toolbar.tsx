@@ -22,6 +22,7 @@ type WhiteboardProps = {
     const onClickArrow = () => dispatch({ type: "arrow", toolType: "arrow" });
     const onClickCircle = () => dispatch({ type: "circle", toolType: "circle" });
     const onClickRectangle = () => dispatch({ type: "rectangle", toolType: "rectangle"});
+    const onClickTextBox = () => dispatch({ type: "textbox", toolType: "textbox"});
     const onSetColor = () => dispatch({ type: "setColor", color: '#FF0000' });
     const onClickClear = () => dispatch({ type: "clear" });
     const onClickDelete = () => dispatch({ type: "delete" });
@@ -67,6 +68,7 @@ type WhiteboardProps = {
           <ToggleButton value="Arrow" onClick={onClickArrow}>Arrow</ToggleButton>
           <ToggleButton value="Circle" onClick={onClickCircle}>Circle</ToggleButton>
           <ToggleButton value="Rectangle" onClick={onClickRectangle}>Rectangle</ToggleButton>
+          <ToggleButton value="TextBox" onClick={onClickTextBox}>TextBox</ToggleButton>
           <ToggleButton value="Color" onClick={onSetColor}>TODO COLOR</ToggleButton>
           <ToggleButton value="Clear" onClick={onClickClear}>clear</ToggleButton>
         </ToggleButtonGroup>
