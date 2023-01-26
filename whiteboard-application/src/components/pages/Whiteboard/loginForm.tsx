@@ -26,7 +26,7 @@ function loginForm() {
                         {/* <label> Password </label> */}
                         <input type='text' className='form-control' name='password' placeholder='Password'></input>
                     </div>
-                    <Link to="/whiteboard">
+                    <Link to="/home">
                         <button className='primaryButton' type='submit'> Login </button>
                     </Link>
                 </form>

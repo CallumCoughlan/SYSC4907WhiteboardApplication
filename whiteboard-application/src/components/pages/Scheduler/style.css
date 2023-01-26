@@ -1,0 +1,27 @@
+.form-title {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.form-container {
+    width: 20%;
+    margin: 30px auto;
+}
+
+.form-label {
+    display: inline;
+}
+
+.form-item {
+    margin-left: 20px;
+    margin-bottom: 30px;
+}
+
+.submit-button {
+    display: block;
+    margin: auto;
+}
+
+.back-button {
+    text-align: center;
+}
