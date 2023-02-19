@@ -8,6 +8,17 @@
     margin: 30px auto;
 }
 
+.set-availability-layout {
+    width: 80%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 30px auto;
+}
+
+.availability-form-container {
+    margin: 0px auto;
+}
+
 .form-label {
     display: inline;
 }

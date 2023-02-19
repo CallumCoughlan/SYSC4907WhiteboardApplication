@@ -261,6 +261,15 @@ const Calendar: FC<CalendarProps> = (props) => {
                     <Link to={props.role === "student" ? "/request-session" : "/create-session"}>
                         <button className='request-session-button' onClick={handleClick}>{props.role === "student" ? "Request a Session" : "Create a Session"}</button>
                     </Link>
+                    {props.role === "scholar" ?
+                        (
+                            <Link to="/set-availability">
+                                <button className='request-session-button' onClick={handleClick}>Set Availability</button>
+                            </Link>
+                        )
+                        :
+                        null
+                    }
                 </div>
             </div>
             <div className='calendar'>
