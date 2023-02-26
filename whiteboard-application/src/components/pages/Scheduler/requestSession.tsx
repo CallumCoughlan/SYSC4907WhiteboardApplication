@@ -1,17 +1,51 @@
 import { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
 import './style.css'
+import Axios from "axios";
+
+
 
 type RequestSessionProps = {
     role: String;
 };
 
 const RequestSession: FC<RequestSessionProps> = (props) => {
-    const [date, setDate] = useState("");
-    const [startTime, setStartTime] = useState("");
-    const [endTime, setEndTime] = useState("");
-    const [course, setCourse] = useState("");
+    //default date is current date + a week
+    let startDate = new Date();
+    startDate.setDate(startDate.getDate() + 7);
+
+    let year = startDate.getFullYear().toString();
+    let month = startDate.getMonth().toString();
+    let day = startDate.getDay().toString();
+
+    if(month == '1') month = '01';
+    if(month == '2') month = '02';
+    if(month == '3') month = '03';
+    if(month == '4') month = '04';
+    if(month == '5') month = '05';
+    if(month == '6') month = '06';
+    if(month == '7') month = '07';
+    if(month == '8') month = '08';
+    if(month == '9') month = '09';
+    
+    if(day == '1') day = '01';
+    if(day == '2') day = '02';
+    if(day == '3') day = '03';
+    if(day == '4') day = '04';
+    if(day == '5') day = '05';
+    if(day == '6') day = '06';
+    if(day == '7') day = '07';
+    if(day == '8') day = '08';
+    if(day == '9') day = '09';
+
+    let str = year + '-' + month + '-' + day;
+
+    const [date, setDate] = useState(str);
+    const [startTime, setStartTime] = useState("8:30");
+    const [endTime, setEndTime] = useState("9:00");
+    const [course, setCourse] = useState("ECOR 1010");
+    const [description, setDescription] = useState("");
+    const [maxParticipants, setMaxParticipants] = useState("10");
 
     function isTimeInvalid(time: String) {
         if (startTime === "") {
@@ -33,8 +67,92 @@ const RequestSession: FC<RequestSessionProps> = (props) => {
         select?.removeAttribute("disabled")
     }
 
+    //function that is invoked on submit
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>){
+        event.preventDefault();
+        console.log("creating session...");
+        console.log("date: " + date); 
+        console.log("start time: " + startTime); 
+        console.log("end time: " + endTime); 
+        console.log("course: " + course);
+        console.log("description: " + description);
+        console.log("max participants: " + maxParticipants);
+
+        // fetch('https://lit-river-91932.herokuapp.com/login', {
+        //     method: "GET",
+        //     // body: JSON.stringify({
+        //     //     id: "bob@cmail.carleton.ca",
+        //     //     password: "12345"
+        //     // }),
+
+        //     mode: "no-cors",
+        //     headers: {
+        //         'id': 'bob@cmail.carleton,ca',
+        //         'password': '12345'
+        //     }
+        // }).then((response) => response.json())
+        // // .then((data) => {
+        // //     console.log(data);
+        // //     // Handle data
+        // // })
+        // .catch((err) => {
+        //     console.log("AAAA" + err.message);
+        // });
+        console.log('AAAAAAAAAAAAAAAAAAAAAAAA');
+        const response = fetch('https://lit-river-91932.herokuapp.com/login', {
+            method: 'GET',
+            mode: "cors",
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'id': 'bob@cmail.carleton.ca',
+                'password': '12345'
+            }
+            
+          })
+          .then(function (response: any) {
+                    console.log(response);
+                });
+    
+
+          console.log('CCCCCCCCCCC');
+        
+        //   const json = string === "" ? {} : JSON.parse(string);
+        //  console.log("AAAAAAAAAAA" + json["valid"])
+
+        // Axios
+        //     .get("https://lit-river-91932.herokuapp.com/login", {headers : {
+        //                 'Access-Control-Allow-Origin': "localhost:3000",
+        //                 'Access-Control-Allow-Methods': "DELETE, POST, GET, OPTIONS",
+        //                 'Access-Control-Allow-Headers': "Content-Type, Authorization, X-Requested-With",
+        //                 'id': 'bob@cmail.carleton,ca',
+        //                  'password': '12345'
+        //              }})
+        //     .then(function (response: any) {
+        //         console.log(response);
+        //     });
+
+
+
+        //send http post request to backend
+        // fetch("https://jsonplaceholder.typicode.com/todos", {
+        // method: "POST",
+        // body: JSON.stringify({
+        //     userId: 1,
+        //     title: "Fix my bugs",
+        //     completed: false
+        // }),
+        // headers: {
+        //     "Content-type": "application/json; charset=UTF-8"
+        // }
+        // })
+        // .then((response) => response.json())
+        // .then((json) => console.log(json));
+
+
+    }
+
     return (
-        <form>
+        <form onSubmit={(event) => handleSubmit(event)}>
             <h1 className='form-title'>{props.role === "student" ? "Request a Session" : "Create a Session"}</h1>
             <div className='form-container'>
                 <label htmlFor="date-input">Select a date:</label>
@@ -84,6 +202,14 @@ const RequestSession: FC<RequestSessionProps> = (props) => {
                     <option value="MATH 1004">MATH 1004</option>
                     <option value="MATH 1104">MATH 1104</option>
                 </select>
+                <br/>
+                <label htmlFor="description">Session description:</label>
+                <input value={description} type="text" id="description" name="description" className="form-item" placeholder="description"
+                 onChange={(e)=>setDescription(e.target.value)}></input>
+                <br/>
+                <label htmlFor="maxParticipants">Max participants:</label>
+                <input value={maxParticipants} type="number" id="maxParticipants" name="maxParticipants" className="form-item" min="2" max="50"
+                 onChange={(e)=>setMaxParticipants(e.target.value)}></input>
                 <br/>
                 <input type="submit" value="Submit" className="submit-button"/>
             </div>
