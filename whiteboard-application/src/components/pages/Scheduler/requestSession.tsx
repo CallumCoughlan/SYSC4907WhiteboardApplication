@@ -67,7 +67,7 @@ const RequestSession: FC<RequestSessionProps> = (props) => {
         select?.removeAttribute("disabled")
     }
 
-    //function that is invoked on submit
+    //function that is invoked on submit 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>){
         event.preventDefault();
         console.log("creating session...");
@@ -78,77 +78,47 @@ const RequestSession: FC<RequestSessionProps> = (props) => {
         console.log("description: " + description);
         console.log("max participants: " + maxParticipants);
 
-        // fetch('https://lit-river-91932.herokuapp.com/login', {
-        //     method: "GET",
-        //     // body: JSON.stringify({
-        //     //     id: "bob@cmail.carleton.ca",
-        //     //     password: "12345"
-        //     // }),
+        //must convert start and end time to "2023-06-25 17:00:00" format
+        let startStr = startTime;
+        let endStr = endTime;
+        if(startStr == '8:30') startStr = '08:30';
+        if(startStr == '9:00') startStr = '09:00';
+        if(startStr == '9:30') startStr = '09:30';
+        if(endStr == '8:30') endStr = '08:30';
+        if(endStr == '9:00') endStr = '09:00';
+        if(endStr == '9:30') endStr = '09:30';
+        startStr = date + ' ' + startStr + ':00';
+        endStr = date + ' ' + endStr + ':00';
 
-        //     mode: "no-cors",
+        // const response = fetch('https://lit-river-91932.herokuapp.com/login', {
+        //     method: 'GET',
+        //     mode: "cors",
         //     headers: {
-        //         'id': 'bob@cmail.carleton,ca',
+        //         //'Access-Control-Allow-Origin': 'http://localhost:3000',
+        //         //'Origin': 'http://localhost:3000',
+        //         'id': 'bob@cmail.carleton.ca',
         //         'password': '12345'
         //     }
-        // }).then((response) => response.json())
-        // // .then((data) => {
-        // //     console.log(data);
-        // //     // Handle data
-        // // })
-        // .catch((err) => {
-        //     console.log("AAAA" + err.message);
-        // });
-        console.log('AAAAAAAAAAAAAAAAAAAAAAAA');
-        const response = fetch('https://lit-river-91932.herokuapp.com/login', {
-            method: 'GET',
-            mode: "cors",
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'id': 'bob@cmail.carleton.ca',
-                'password': '12345'
-            }
-            
-          })
-          .then(function (response: any) {
-                    console.log(response);
-                });
-    
-
-          console.log('CCCCCCCCCCC');
-        
-        //   const json = string === "" ? {} : JSON.parse(string);
-        //  console.log("AAAAAAAAAAA" + json["valid"])
-
-        // Axios
-        //     .get("https://lit-river-91932.herokuapp.com/login", {headers : {
-        //                 'Access-Control-Allow-Origin': "localhost:3000",
-        //                 'Access-Control-Allow-Methods': "DELETE, POST, GET, OPTIONS",
-        //                 'Access-Control-Allow-Headers': "Content-Type, Authorization, X-Requested-With",
-        //                 'id': 'bob@cmail.carleton,ca',
-        //                  'password': '12345'
-        //              }})
-        //     .then(function (response: any) {
-        //         console.log(response);
-        //     });
-
-
-
-        //send http post request to backend
-        // fetch("https://jsonplaceholder.typicode.com/todos", {
-        // method: "POST",
-        // body: JSON.stringify({
-        //     userId: 1,
-        //     title: "Fix my bugs",
-        //     completed: false
-        // }),
-        // headers: {
-        //     "Content-type": "application/json; charset=UTF-8"
-        // }
-        // })
+        //   })
         // .then((response) => response.json())
         // .then((json) => console.log(json));
 
-
+        //send http post request to backend to create session
+        fetch("https://lit-river-91932.herokuapp.com/session", {
+        method: "POST",
+        body: JSON.stringify({
+            date: date,
+            startTime: startStr,
+            endTime: endStr,
+            course: course,
+            description: description,
+            numParticipants: maxParticipants,
+            sessionType: "public"
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+        })
     }
 
     return (
