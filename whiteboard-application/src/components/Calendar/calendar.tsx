@@ -7,17 +7,46 @@ type CalendarProps = {
     role: String;
 };
 
+
+//fetch session info from server
+var jsonSessionInfo = null;
+const request = new XMLHttpRequest();
+request.open('GET', 'https://lit-river-91932.herokuapp.com/session', false);
+request.send(null);
+if (request.status === 200) {
+    jsonSessionInfo = JSON.parse(request.responseText);
+}
+//console.log(sessionInfo['results'][0]['description']);
+
+var sessionInfoMap = new Map<string, string[]>();
+sessionInfoMap.set("apples", ["hello","world"]);
+for(let index = 0; index <jsonSessionInfo['results'].length; index ++){
+    console.log(jsonSessionInfo['results'][index]['date']);
+    var date = jsonSessionInfo['results'][index]['date'];
+
+    console.log(sessionInfoMap.get('apples'));
+
+    if(sessionInfoMap.get(date) == null){
+        console.log("ITS NULL");
+    }
+}
+console.log(jsonSessionInfo['results'].length);
+
+
 const Calendar: FC<CalendarProps> = (props) => {
     const [dates, setDates] = useState(new Map<number, number[][]>());
     const [weekViewSelected, setWeekViewSelected] = useState(false);
+    const [currentYear, setCurrentYear] = useState(0);
     const [currentMonth, setCurrentMonth] = useState(0);
     const [currentWeek, setCurrentWeek] = useState(0);
 
     useEffect(() => {
         const currentDate = new Date();
         const month = currentDate.getMonth();
+        const year = currentDate.getFullYear();
 
         setCurrentMonth(month);
+        setCurrentYear(year);
 
         setDates(() => {
             var newDates;
@@ -288,16 +317,16 @@ const Calendar: FC<CalendarProps> = (props) => {
                                 if (day === currentDate.getDate() && currentMonth === currentDate.getMonth()) {
                                     if (!(currentDate.getDate() > 20 && currentWeek === 0) && !(currentDate.getDate() < 7 && currentWeek > 1)) {
                                         return (
-                                            <div className='day week current'>{day}</div>
+                                            <div className='day week current'>{day} aaa</div>
                                         );
                                     } else {
                                         return (
-                                            <div className='day week'>{day}</div>
+                                            <div className='day week'>{day} bbb</div>
                                         );
                                     }
                                 } else {
                                     return (
-                                        <div className='day week'>{day}</div>
+                                        <div className='day week'> ccc{day}</div>
                                     );
                                 }
                             })
@@ -309,15 +338,21 @@ const Calendar: FC<CalendarProps> = (props) => {
                                 return days.map((day)=>{
                                     if ((index === 0 && day > 7) || (index > 2 && day < 7)) {
                                         return (
-                                            <div className='day other-month'>{day}</div>
+                                            <div className='day other-month'>{day} ddd</div>
                                         );
                                     } else if (day === currentDate.getDate() && currentMonth === currentDate.getMonth()) {
                                         return (
-                                            <div className='day current'>{day}</div>
+                                            <div className='day current'>{day} eee</div>
                                         );
                                     } else {
+                                        
+                                        // console.log("day is " + day);
+                                        // console.log("currentDate is " + currentDate);
+                                        // console.log("currentMonth is " + currentMonth);
+                                        // console.log("year is " + currentYear);
+                                        // console.log("dates is " + dates);
                                         return (
-                                            <div className='day'>{day}</div>
+                                            <div className='day'>{day} fff </div>
                                         );
                                     }
                                 });

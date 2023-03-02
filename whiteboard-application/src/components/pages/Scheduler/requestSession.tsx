@@ -89,6 +89,8 @@ const RequestSession: FC<RequestSessionProps> = (props) => {
         if(endStr == '9:30') endStr = '09:30';
         startStr = date + ' ' + startStr + ':00';
         endStr = date + ' ' + endStr + ':00';
+        
+        var sessionType = props.role === "student" ? "private" : "public";
 
         // const response = fetch('https://lit-river-91932.herokuapp.com/login', {
         //     method: 'GET',
@@ -113,7 +115,7 @@ const RequestSession: FC<RequestSessionProps> = (props) => {
             course: course,
             description: description,
             numParticipants: maxParticipants,
-            sessionType: "public"
+            sessionType: sessionType
         }),
         headers: {
             "Content-type": "application/json; charset=UTF-8"
@@ -123,7 +125,7 @@ const RequestSession: FC<RequestSessionProps> = (props) => {
 
     return (
         <form onSubmit={(event) => handleSubmit(event)}>
-            <h1 className='form-title'>{props.role === "student" ? "Request a Session" : "Create a Session"}</h1>
+            <h1 className='form-title'>{props.role === "student" ? "Request a Private Session" : "Create a Public Session"}</h1>
             <div className='form-container'>
                 <label htmlFor="date-input">Select a date:</label>
                 <input type="date" id="date-input" value={date} className="form-item" onChange={(e)=>setDate(e.target.value)}/>
