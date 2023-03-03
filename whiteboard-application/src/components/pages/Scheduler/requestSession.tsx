@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './style.css'
-import Axios from "axios";
+//import Axios from "axios";
 
 
 
@@ -95,6 +95,7 @@ const RequestSession: FC<RequestSessionProps> = (props) => {
         endStr = date + ' ' + endStr + ':00';
         
         var sessionType = props.role === "student" ? "private" : "public";
+        var sessionStatus = props.role === "student" ? "requested" : "created";
 
         // const response = fetch('https://lit-river-91932.herokuapp.com/login', {
         //     method: 'GET',
@@ -119,7 +120,9 @@ const RequestSession: FC<RequestSessionProps> = (props) => {
             course: course,
             description: description,
             numParticipants: maxParticipants,
-            sessionType: sessionType
+            sessionType: sessionType,
+            sessionStatus: sessionStatus,
+            userID: "bob@cmail.carleton.ca"
         }),
         headers: {
             "Content-type": "application/json; charset=UTF-8"

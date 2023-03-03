@@ -1,10 +1,34 @@
 import { textAlign } from '@mui/system';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Link } from "react-router-dom";
 
 import './style.css';
 
-function adminForm() {
+function convertTime(time: string) {
+    var date = new Date(time);
+    var convertedTime = ""
+    var hours = date.getUTCHours()
+    var hoursString = hours < 10 ? "0" + hours : hours
+    var minutes = date.getUTCMinutes()
+    var minutesString = minutes === 0 ? "00" : minutes
+    convertedTime = hoursString + ":" + minutesString
+    return convertedTime
+}
+
+function AdminForm() {
+    const [sessions, setSessions] = useState([]);
+
+    useEffect(() => {
+        fetch("https://lit-river-91932.herokuapp.com/requested-sessions", {
+            method: "GET",
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data)
+            setSessions(data["results"])
+        })
+    }, []);
+
     return (
         <div className='wrapper'>
             <div className='sidebar'>
@@ -57,13 +81,17 @@ function adminForm() {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td className='col1'>devonsnow@cmail.carleton.ca</td>
-                            <td className='col2'>01/27/2023</td>
-                            <td className='col3'>9:00-11:00</td>
-                            <td className='col4'>ECOR 1010</td>
-                            <td className='col5'><button>Assign</button></td>
-                        </tr>
+                        {sessions.map((session) => {
+                            return (
+                                <tr>
+                                    <td className='col1'>{session["id"]}</td>
+                                    <td className='col2'>{session["date"]}</td>
+                                    <td className='col3'>{convertTime(session["start_time"])} - {convertTime(session["end_time"])}</td>
+                                    <td className='col4'>{session["course_code"]}</td>
+                                    <td className='col5'><button>Assign</button></td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
             </div>
@@ -71,4 +99,4 @@ function adminForm() {
     )
 }
 
-export default adminForm;
+export default AdminForm;
