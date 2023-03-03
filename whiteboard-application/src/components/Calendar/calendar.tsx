@@ -7,30 +7,34 @@ type CalendarProps = {
     role: String;
 };
 
-
-//fetch session info from server
-var jsonSessionInfo = null;
-const request = new XMLHttpRequest();
-request.open('GET', 'https://lit-river-91932.herokuapp.com/session', false);
-request.send(null);
-if (request.status === 200) {
-    jsonSessionInfo = JSON.parse(request.responseText);
-}
-//console.log(sessionInfo['results'][0]['description']);
-
 var sessionInfoMap = new Map<string, string[]>();
-sessionInfoMap.set("apples", ["hello","world"]);
-for(let index = 0; index <jsonSessionInfo['results'].length; index ++){
-    console.log(jsonSessionInfo['results'][index]['date']);
-    var date = jsonSessionInfo['results'][index]['date'];
 
-    console.log(sessionInfoMap.get('apples'));
+//fetches information of all session from server
+function fetchSessionInfo() {
+    var jsonSessionInfo = null;
+    const request = new XMLHttpRequest();
+    request.open('GET', 'https://lit-river-91932.herokuapp.com/session', false);
+    request.send(null);
+    if (request.status === 200) {
+        jsonSessionInfo = JSON.parse(request.responseText);
+    }
+    //console.log(jsonSessionInfo['results'][0]['description']);
 
-    if(sessionInfoMap.get(date) == null){
-        console.log("ITS NULL");
+    //convert json to a hashmap of string to list of json objects where the keys are dates
+    for (let index = 0; index < jsonSessionInfo['results'].length; index++) {
+        var date = jsonSessionInfo['results'][index]['date'];
+
+        if (sessionInfoMap.get(date) == null) {
+            sessionInfoMap.set(date, [jsonSessionInfo['results'][index]]);
+        } else {
+            // @ts-ignore
+            sessionInfoMap.get(date).push(jsonSessionInfo['results'][index]);
+        }
     }
 }
-console.log(jsonSessionInfo['results'].length);
+
+//fetch information of all session from server at the start
+fetchSessionInfo();
 
 
 const Calendar: FC<CalendarProps> = (props) => {
@@ -41,6 +45,9 @@ const Calendar: FC<CalendarProps> = (props) => {
     const [currentWeek, setCurrentWeek] = useState(0);
 
     useEffect(() => {
+        //fetch information of all session when useEffect runs
+        fetchSessionInfo();
+
         const currentDate = new Date();
         const month = currentDate.getMonth();
         const year = currentDate.getFullYear();
@@ -54,7 +61,7 @@ const Calendar: FC<CalendarProps> = (props) => {
             if (month >= 8) {
                 //fall
                 newDates = getDates(new Date(currentDate.getFullYear(), 8, 1), new Date(currentDate.getFullYear(), 11, 31));
-            } else if (month >=4) {
+            } else if (month >= 4) {
                 //summer
                 newDates = getDates(new Date(currentDate.getFullYear(), 4, 1), new Date(currentDate.getFullYear(), 7, 31));
             } else {
@@ -62,10 +69,10 @@ const Calendar: FC<CalendarProps> = (props) => {
                 newDates = getDates(new Date(currentDate.getFullYear(), 0, 1), new Date(currentDate.getFullYear(), 3, 30));
             }
 
-            console.log(newDates);
+            // console.log(newDates);
             return newDates;
         });
-    
+
         function getDates(startDate: Date, endDate: Date) {
             var newDates = new Map<number, number[][]>();
             var month = 0;
@@ -79,7 +86,7 @@ const Calendar: FC<CalendarProps> = (props) => {
                 if (dayOfWeek === 0) {
                     datesOfWeek = [];
                 }
-                
+
                 if (dayOfMonth === 1) {
                     month = date.getMonth();
                     datesOfWeek = [];
@@ -120,7 +127,7 @@ const Calendar: FC<CalendarProps> = (props) => {
                 }
                 //console.log(dayOfMonth);
             }
-    
+
             return newDates;
         }
     }, []);
@@ -254,7 +261,7 @@ const Calendar: FC<CalendarProps> = (props) => {
                 break;
             }
         }
-        const date  = new Date();
+        const date = new Date();
         return monthString + " " + date.getFullYear();
     }
 
@@ -276,6 +283,80 @@ const Calendar: FC<CalendarProps> = (props) => {
         } else {
             return getMonthString(currentMonth);
         }
+    }
+
+    //fetches session course, description, start time, end time and session type
+    //for a particular date from sessionInfoMap
+    function getDaySessions(year: number, month: number, day: number) {
+        let monthStr = month.toString();
+        let dayStr = day.toString();
+
+        //for some reason month values start from 0
+        if (monthStr == '0') monthStr = '01';
+        if (monthStr == '1') monthStr = '02';
+        if (monthStr == '2') monthStr = '03';
+        if (monthStr == '3') monthStr = '04';
+        if (monthStr == '4') monthStr = '05';
+        if (monthStr == '5') monthStr = '06';
+        if (monthStr == '6') monthStr = '07';
+        if (monthStr == '7') monthStr = '08';
+        if (monthStr == '8') monthStr = '09';
+        if (monthStr == '9') monthStr = '10';
+        if (monthStr == '10') monthStr = '11';
+        if (monthStr == '11') monthStr = '12';
+
+        if (dayStr == '1') dayStr = '01';
+        if (dayStr == '2') dayStr = '02';
+        if (dayStr == '3') dayStr = '03';
+        if (dayStr == '4') dayStr = '04';
+        if (dayStr == '5') dayStr = '05';
+        if (dayStr == '6') dayStr = '06';
+        if (dayStr == '7') dayStr = '07';
+        if (dayStr == '8') dayStr = '08';
+        if (dayStr == '9') dayStr = '09';
+
+        var dateStr = year + '-' + monthStr + '-' + dayStr + 'T00:00:00.000Z';
+        console.log("dateStr is " + dateStr);
+
+        var course = '';
+        var description = '';
+        var start = '';
+        var end = '';
+        var type = '';
+
+        var bool = false;
+        if (sessionInfoMap.has(dateStr)) {
+            bool = true;
+            // side note, for some reason if I call sessionInfoMap.get
+            // in this if statement then it crashes
+        }
+
+        if (bool) {
+            //todo, instead of getting at index 0, need to get at all indices incase a day has multiple sessions
+
+            // @ts-ignore
+            course = sessionInfoMap.get(dateStr)[0]['course_code'];
+
+            // @ts-ignore
+            description = sessionInfoMap.get(dateStr)[0]['description'];
+
+            // @ts-ignore
+            start = sessionInfoMap.get(dateStr)[0]['start_time'];
+
+            // @ts-ignore
+            end = sessionInfoMap.get(dateStr)[0]['end_time'];
+
+            // @ts-ignore
+            type = sessionInfoMap.get(dateStr)[0]['session_type'];
+        }
+
+        console.log("course is " + course)
+        console.log("description is " + description)
+        console.log("start is " + start)
+        console.log("end is " + end)
+        console.log("type is " + type)
+        
+        return [course, description, start, end, type];
     }
 
     return (
@@ -310,49 +391,85 @@ const Calendar: FC<CalendarProps> = (props) => {
                     </div>
                 </div>
                 <div className='calendar-grid'>
-                    {weekViewSelected ? 
+                    {weekViewSelected ?
                         (
-                            dates.get(currentMonth)![currentWeek].map((day)=>{
+                            dates.get(currentMonth)![currentWeek].map((day) => {
                                 const currentDate = new Date();
                                 if (day === currentDate.getDate() && currentMonth === currentDate.getMonth()) {
                                     if (!(currentDate.getDate() > 20 && currentWeek === 0) && !(currentDate.getDate() < 7 && currentWeek > 1)) {
+                                        var results = getDaySessions(currentYear, currentMonth, day);
                                         return (
-                                            <div className='day week current'>{day} aaa</div>
+                                        <div className='day week current'>{day}
+                                            {results[0]}
+                                            {results[1]}
+                                            {results[2]}
+                                            {results[3]}
+                                            {results[4]}
+                                        </div>
                                         );
                                     } else {
+                                        var results = getDaySessions(currentYear, currentMonth, day);
                                         return (
-                                            <div className='day week'>{day} bbb</div>
+                                            <div className='day week'>{day}
+                                                {results[0]}
+                                                {results[1]}
+                                                {results[2]}
+                                                {results[3]}
+                                                {results[4]}
+                                            </div>
                                         );
                                     }
                                 } else {
+                                    var results = getDaySessions(currentYear, currentMonth, day);
                                     return (
-                                        <div className='day week'> ccc{day}</div>
+                                        <div className='day week'>{day}
+                                            {results[0]}
+                                            {results[1]}
+                                            {results[2]}
+                                            {results[3]}
+                                            {results[4]}
+                                        </div>
                                     );
                                 }
                             })
                         )
                         :
                         (
-                            dates.get(currentMonth)?.map((days, index)=>{
+                            dates.get(currentMonth)?.map((days, index) => {
                                 const currentDate = new Date();
-                                return days.map((day)=>{
+                                return days.map((day) => {
                                     if ((index === 0 && day > 7) || (index > 2 && day < 7)) {
+                                        var results = getDaySessions(currentYear, currentMonth, day);
                                         return (
-                                            <div className='day other-month'>{day} ddd</div>
+                                            <div className='day other-month'>{day}
+                                                {results[0]}
+                                                {results[1]}
+                                                {results[2]}
+                                                {results[3]}
+                                                {results[4]}
+                                            </div>
                                         );
                                     } else if (day === currentDate.getDate() && currentMonth === currentDate.getMonth()) {
+                                        var results= getDaySessions(currentYear, currentMonth, day);
                                         return (
-                                            <div className='day current'>{day} eee</div>
+                                            <div className='day current'>{day}
+                                                {results[0]}
+                                                {results[1]}
+                                                {results[2]}
+                                                {results[3]}
+                                                {results[4]}
+                                            </div>
                                         );
                                     } else {
-                                        
-                                        // console.log("day is " + day);
-                                        // console.log("currentDate is " + currentDate);
-                                        // console.log("currentMonth is " + currentMonth);
-                                        // console.log("year is " + currentYear);
-                                        // console.log("dates is " + dates);
+                                        var results = getDaySessions(currentYear, currentMonth, day);
                                         return (
-                                            <div className='day'>{day} fff </div>
+                                            <div className='day'>{day}
+                                                {results[0]}
+                                                {results[1]}
+                                                {results[2]}
+                                                {results[3]}
+                                                {results[4]}
+                                            </div>
                                         );
                                     }
                                 });

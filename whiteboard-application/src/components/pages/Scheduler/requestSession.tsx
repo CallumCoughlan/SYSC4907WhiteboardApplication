@@ -16,18 +16,22 @@ const RequestSession: FC<RequestSessionProps> = (props) => {
 
     let year = startDate.getFullYear().toString();
     let month = startDate.getMonth().toString();
-    let day = startDate.getDay().toString();
+    let day = startDate.getDate().toString();
 
-    if(month == '1') month = '01';
-    if(month == '2') month = '02';
-    if(month == '3') month = '03';
-    if(month == '4') month = '04';
-    if(month == '5') month = '05';
-    if(month == '6') month = '06';
-    if(month == '7') month = '07';
-    if(month == '8') month = '08';
-    if(month == '9') month = '09';
-    
+    //for some reason months start at index 0
+    if(month == '0') month = '01';
+    if(month == '1') month = '02';
+    if(month == '2') month = '03';
+    if(month == '3') month = '04';
+    if(month == '4') month = '05';
+    if(month == '5') month = '06';
+    if(month == '6') month = '07';
+    if(month == '7') month = '08';
+    if(month == '8') month = '09';
+    if(month == '9') month = '10';
+    if(month == '10') month = '11';
+    if(month == '11') month = '12';
+
     if(day == '1') day = '01';
     if(day == '2') day = '02';
     if(day == '3') day = '03';
