@@ -20,6 +20,9 @@ function fetchSessionInfo() {
     }
     //console.log(jsonSessionInfo['results'][0]['description']);
 
+    //clear previous sessionInfoMap
+    sessionInfoMap = new Map<string, string[]>();
+
     //convert json to a hashmap of string to list of json objects where the keys are dates
     for (let index = 0; index < jsonSessionInfo['results'].length; index++) {
         var date = jsonSessionInfo['results'][index]['date'];
@@ -34,7 +37,7 @@ function fetchSessionInfo() {
 }
 
 //fetch information of all session from server at the start
-fetchSessionInfo();
+//fetchSessionInfo();
 
 
 const Calendar: FC<CalendarProps> = (props) => {
@@ -285,9 +288,8 @@ const Calendar: FC<CalendarProps> = (props) => {
         }
     }
 
-    //fetches session course, description, start time, end time and session type
-    //for a particular date from sessionInfoMap
-    function getDaySessions(year: number, month: number, day: number) {
+    //fetches the div for a particular date from sessionInfoMap
+    function getDaySessionsDiv(year: number, month: number, day: number, divClass: string) {
         let monthStr = month.toString();
         let dayStr = day.toString();
 
@@ -318,45 +320,63 @@ const Calendar: FC<CalendarProps> = (props) => {
         var dateStr = year + '-' + monthStr + '-' + dayStr + 'T00:00:00.000Z';
         console.log("dateStr is " + dateStr);
 
-        var course = '';
-        var description = '';
-        var start = '';
-        var end = '';
-        var type = '';
-
+        //if a session exists for that day
         var bool = false;
         if (sessionInfoMap.has(dateStr)) {
             bool = true;
             // side note, for some reason if I call sessionInfoMap.get
             // in this if statement then it crashes
+        }else{
+            return(
+                <div className={divClass}>
+                {day}
+            </div>
+            );
         }
 
+        var sessions = null;
         if (bool) {
-            //todo, instead of getting at index 0, need to get at all indices incase a day has multiple sessions
-
             // @ts-ignore
-            course = sessionInfoMap.get(dateStr)[0]['course_code'];
-
-            // @ts-ignore
-            description = sessionInfoMap.get(dateStr)[0]['description'];
-
-            // @ts-ignore
-            start = sessionInfoMap.get(dateStr)[0]['start_time'];
-
-            // @ts-ignore
-            end = sessionInfoMap.get(dateStr)[0]['end_time'];
-
-            // @ts-ignore
-            type = sessionInfoMap.get(dateStr)[0]['session_type'];
+            sessions = sessionInfoMap.get(dateStr);
         }
 
-        console.log("course is " + course)
-        console.log("description is " + description)
-        console.log("start is " + start)
-        console.log("end is " + end)
-        console.log("type is " + type)
-        
-        return [course, description, start, end, type];
+        const sessionDivs: JSX.Element[] = [];
+        const PublicSessionField = ({ results }: { results: Array<String> }) => (
+            <div className='public-div'>
+                {results[0]}
+                <br></br>
+                {results[1]}
+            </div>
+          );
+        const PrivateSessionField = ({ results }: { results: Array<String> }) => (
+            <div className='private-div'>
+                {results[0]}
+                <br></br>
+                {results[1]}
+            </div>
+          );
+
+        // @ts-ignore
+        for (var i = 0; i < sessions.length; i++) {
+
+            // @ts-ignore
+            var results = [sessions[i]['course_code'] + " " + sessions[i]['session_type'], sessions[i]['start_time'].slice(11).slice(0,-8) + " : "+ sessions[i]['end_time'].slice(11).slice(0,-8)];
+
+            // @ts-ignore
+            if(sessions[i]['session_type'] == 'public'){
+                sessionDivs.push(<PublicSessionField results={results}  />);
+            }else{
+                sessionDivs.push(<PrivateSessionField results={results}  />);
+            } 
+        }
+
+        // var results = [course, description, start, end, type];
+        return (
+            <div className={divClass}>
+                {day}
+                {sessionDivs}
+            </div>
+        );
     }
 
     return (
@@ -397,39 +417,15 @@ const Calendar: FC<CalendarProps> = (props) => {
                                 const currentDate = new Date();
                                 if (day === currentDate.getDate() && currentMonth === currentDate.getMonth()) {
                                     if (!(currentDate.getDate() > 20 && currentWeek === 0) && !(currentDate.getDate() < 7 && currentWeek > 1)) {
-                                        var results = getDaySessions(currentYear, currentMonth, day);
-                                        return (
-                                        <div className='day week current'>{day}
-                                            {results[0]}
-                                            {results[1]}
-                                            {results[2]}
-                                            {results[3]}
-                                            {results[4]}
-                                        </div>
-                                        );
+                                        var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day week current');
+                                        return(results);
                                     } else {
-                                        var results = getDaySessions(currentYear, currentMonth, day);
-                                        return (
-                                            <div className='day week'>{day}
-                                                {results[0]}
-                                                {results[1]}
-                                                {results[2]}
-                                                {results[3]}
-                                                {results[4]}
-                                            </div>
-                                        );
+                                        var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day week');
+                                        return(results);
                                     }
                                 } else {
-                                    var results = getDaySessions(currentYear, currentMonth, day);
-                                    return (
-                                        <div className='day week'>{day}
-                                            {results[0]}
-                                            {results[1]}
-                                            {results[2]}
-                                            {results[3]}
-                                            {results[4]}
-                                        </div>
-                                    );
+                                    var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day week');
+                                    return(results);
                                 }
                             })
                         )
@@ -439,38 +435,14 @@ const Calendar: FC<CalendarProps> = (props) => {
                                 const currentDate = new Date();
                                 return days.map((day) => {
                                     if ((index === 0 && day > 7) || (index > 2 && day < 7)) {
-                                        var results = getDaySessions(currentYear, currentMonth, day);
-                                        return (
-                                            <div className='day other-month'>{day}
-                                                {results[0]}
-                                                {results[1]}
-                                                {results[2]}
-                                                {results[3]}
-                                                {results[4]}
-                                            </div>
-                                        );
+                                        var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day other-month');
+                                        return(results);
                                     } else if (day === currentDate.getDate() && currentMonth === currentDate.getMonth()) {
-                                        var results= getDaySessions(currentYear, currentMonth, day);
-                                        return (
-                                            <div className='day current'>{day}
-                                                {results[0]}
-                                                {results[1]}
-                                                {results[2]}
-                                                {results[3]}
-                                                {results[4]}
-                                            </div>
-                                        );
+                                        var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day current');
+                                        return(results);
                                     } else {
-                                        var results = getDaySessions(currentYear, currentMonth, day);
-                                        return (
-                                            <div className='day'>{day}
-                                                {results[0]}
-                                                {results[1]}
-                                                {results[2]}
-                                                {results[3]}
-                                                {results[4]}
-                                            </div>
-                                        );
+                                        var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day');
+                                        return(results);
                                     }
                                 });
                             })
