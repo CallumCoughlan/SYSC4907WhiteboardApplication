@@ -331,7 +331,6 @@ const reducer: Reducer<State, Action> = (state, action) => {
           var reader = new FileReader();
 
           reader.onload = function() {
-            console.log("loading image from file");
 
             const url: string = reader.result as string;
             imageElement.src = url;
@@ -862,11 +861,14 @@ function addTextBoxMouseListeners(state: State) {
 
     textbox = new fabric.Textbox(
       "", {
+        left: origX,
+        top: origY,
         selectable: true,
         evented: true,
         editable: true,
-        width: 450,
-        height: 400
+        width: pointer.x - origX,
+        height: pointer.y - origY,
+        angle: 0
       }
     );
 
@@ -881,13 +883,15 @@ function addTextBoxMouseListeners(state: State) {
     if (!isDown) return;
     var pointer = state.canvas.getPointer(o.e);
 
+    if (origX > pointer.x) {
       textbox.set({ left: pointer.x });
-    
+    }
+    if (origY > pointer.y) {
       textbox.set({ top: pointer.y });
-    
+    }
 
-    // textbox.set({ width: Math.abs(origX - pointer.x) });
-    // textbox.set({ height: Math.abs(origY - pointer.y) });
+    textbox.set({ width: Math.abs(origX - pointer.x) });
+    textbox.set({ height: Math.abs(origY - pointer.y) });
 
     state.canvas.renderAll();
   });
@@ -897,10 +901,6 @@ function addTextBoxMouseListeners(state: State) {
       return state;
     }
     isDown = false;
-    state.canvas.discardActiveObject();
-    //state.canvas.selection = true;
-
-    //todo, send the new recangle to the server???
   });
 }
 
@@ -972,7 +972,6 @@ function addImageMouseListeners(state: State, imageElement: HTMLImageElement) {
       return state;
     }
     isDown = false;
-    state.canvas.discardActiveObject();
   });
 }
 
