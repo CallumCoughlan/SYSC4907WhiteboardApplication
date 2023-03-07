@@ -926,6 +926,7 @@ function addImageMouseListeners(state: State, imageElement: HTMLImageElement) {
     allObjects.forEach((object) => {
       object.selectable = false
     });
+    state.canvas.selection = false;
 
     isDown = true;
     var pointer = state.canvas.getPointer(o.e);
@@ -960,8 +961,8 @@ function addImageMouseListeners(state: State, imageElement: HTMLImageElement) {
       image.set({ top: Math.abs(pointer.y) });
     }
 
-    image.set({ width: Math.abs(origX - pointer.x) });
-    image.set({ height: Math.abs(origY - pointer.y) });
+    image.scaleToWidth(Math.abs(origX - pointer.x))
+    image.scaleToHeight(Math.abs(origY - pointer.y));
 
     state.canvas.renderAll();
   });
