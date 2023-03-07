@@ -11,6 +11,9 @@ var firstIter = true;
 const reducer: Reducer<State, Action> = (state, action) => {
   console.log("current tool:" + state.toolType)
 
+  var chooseFile = document.getElementById("choose-file");
+  if (chooseFile) { chooseFile.style.display = "none"};
+
   //todo, figure out why the reducer is being called twice
 
   switch (action.type) {
@@ -272,14 +275,76 @@ const reducer: Reducer<State, Action> = (state, action) => {
       //get out of drawing mode
       state.canvas.isDrawingMode = false;
 
-      //add rectangle mouse listeners
+      //add textbox mouse listeners
       addTextBoxMouseListeners(state)
 
       return { ...state };
     }
 
     //======================================
-    //           Case 9 set width
+    //            Case 9 Image
+    //======================================
+    case "image": {
+      console.log("---------------------------------");
+      console.log("import image");
+      
+      if (!state.canvas) {
+        return state;
+      }
+      
+      //update state toolType
+      const { toolType } = action;
+      if (toolType !== undefined) {
+        state.toolType = toolType;
+      }
+
+      //remove any previous listeners
+      state.canvas.off('mouse:down').off('mouse:move').off('mouse:up');
+
+      //re-enable object selection
+      const allObjects = state.canvas.getObjects();
+      allObjects.forEach((object) => {
+        object.selectable = true
+      });
+
+      //get out of drawing mode
+      state.canvas.isDrawingMode = false;
+      
+      //add image mouse listeners on imageElement load
+      var imageElement = new Image()
+
+      imageElement.onload = function() {
+        console.log("image loaded")
+        addImageMouseListeners(state, imageElement)
+      }
+
+      imageElement.onerror = function() {
+        console.log("image failed to load")
+      }
+
+      if (chooseFile) { 
+        chooseFile.style.display = "inline"
+      
+        chooseFile.onchange = function(e: Event) {
+          //@ts-ignore
+          var file = e.currentTarget.files[0];
+          var reader = new FileReader();
+
+          reader.onload = function() {
+            console.log("loading image from file");
+
+            const url: string = reader.result as string;
+            imageElement.src = url;
+        }
+        reader.readAsDataURL(file)
+        }
+      }
+
+      return { ...state};
+    }
+
+    //======================================
+    //           Case 10 set width
     //======================================
     case "setWidth": {
       console.log("---------------------------------");
@@ -288,7 +353,7 @@ const reducer: Reducer<State, Action> = (state, action) => {
       if (!state.canvas) {
         return state;
       }
-
+      
       //remove any previous listeners
       state.canvas.off('mouse:down').off('mouse:move').off('mouse:up');
 
@@ -320,7 +385,7 @@ const reducer: Reducer<State, Action> = (state, action) => {
     }
 
     //======================================
-    //          Case 10 set color
+    //          Case 11 set color
     //======================================
     case "setColor": {
       console.log("---------------------------------");
@@ -338,7 +403,7 @@ const reducer: Reducer<State, Action> = (state, action) => {
     }
 
     //======================================
-    //           Case 11 clear
+    //           Case 12 clear
     //======================================
     case "clear": {
       console.log("---------------------------------");
@@ -380,7 +445,7 @@ const reducer: Reducer<State, Action> = (state, action) => {
     }
 
     //======================================
-    //           Case 11 delete
+    //           Case 13 delete
     //======================================
     case "delete": {
       console.log("---------------------------------");
@@ -401,7 +466,7 @@ const reducer: Reducer<State, Action> = (state, action) => {
     }
 
     //======================================
-    //           Case 12 dispose
+    //           Case 14 dispose
     //======================================
     case "dispose": {
       state.canvas = null;
@@ -767,8 +832,8 @@ function addRectangleMouseListeners(state: State) {
   });
 }
 
-// adds mouse listeners to canvas that add rectangles
-// state contains width and color for rectangles
+// adds mouse listeners to canvas that add text boxes
+// state contains width for text box
 function addTextBoxMouseListeners(state: State) {
   if (!state.canvas) {
     return state;
@@ -836,6 +901,77 @@ function addTextBoxMouseListeners(state: State) {
     //state.canvas.selection = true;
 
     //todo, send the new recangle to the server???
+  });
+}
+
+// adds mouse listeners to canvas that add images
+// state contains image width
+function addImageMouseListeners(state: State, imageElement: HTMLImageElement) {
+  if (!state.canvas) {
+    return state;
+  }
+
+  var image: fabric.Image;
+  var isDown = false;
+  var origX = 0;
+  var origY = 0;
+
+  state.canvas.on('mouse:down', function (o) {
+    if (!state.canvas) {
+      return state;
+    }
+
+    //temporarily disable object selection
+    const allObjects = state.canvas.getObjects();
+    allObjects.forEach((object) => {
+      object.selectable = false
+    });
+
+    isDown = true;
+    var pointer = state.canvas.getPointer(o.e);
+    origX = pointer.x;
+    origY = pointer.y;
+
+    image = new fabric.Image(imageElement, {
+      left: origX,
+      top: origY,
+      originX: 'left',
+      originY: 'top',
+      width: pointer.x - origX,
+      height: pointer.y - origY,
+      angle: 0
+    });
+
+    state.canvas.add(image)
+  });
+  
+  state.canvas.on('mouse:move', function (o) {
+    if (!state.canvas) {
+      return state;
+    }
+
+    if (!isDown) return;
+    var pointer = state.canvas.getPointer(o.e);
+
+    if (origX > pointer.x) {
+      image.set({ left: Math.abs(pointer.x) });
+    }
+    if (origY > pointer.y) {
+      image.set({ top: Math.abs(pointer.y) });
+    }
+
+    image.set({ width: Math.abs(origX - pointer.x) });
+    image.set({ height: Math.abs(origY - pointer.y) });
+
+    state.canvas.renderAll();
+  });
+  
+  state.canvas.on('mouse:up', function (o) {
+    if (!state.canvas) {
+      return state;
+    }
+    isDown = false;
+    state.canvas.discardActiveObject();
   });
 }
 
