@@ -1,17 +1,56 @@
 import { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
 import './style.css'
+//import Axios from "axios";
+
+var TEMP_SCHOLAR_ID = "alice@cmail.carleton.ca";
+
 
 type RequestSessionProps = {
     role: String;
 };
 
 const RequestSession: FC<RequestSessionProps> = (props) => {
-    const [date, setDate] = useState("");
-    const [startTime, setStartTime] = useState("");
-    const [endTime, setEndTime] = useState("");
-    const [course, setCourse] = useState("");
+    //default date is current date + a week
+    let startDate = new Date();
+    startDate.setDate(startDate.getDate() + 7);
+
+    let year = startDate.getFullYear().toString();
+    let month = startDate.getMonth().toString();
+    let day = startDate.getDate().toString();
+
+    //for some reason months start at index 0
+    if(month == '0') month = '01';
+    if(month == '1') month = '02';
+    if(month == '2') month = '03';
+    if(month == '3') month = '04';
+    if(month == '4') month = '05';
+    if(month == '5') month = '06';
+    if(month == '6') month = '07';
+    if(month == '7') month = '08';
+    if(month == '8') month = '09';
+    if(month == '9') month = '10';
+    if(month == '10') month = '11';
+    if(month == '11') month = '12';
+
+    if(day == '1') day = '01';
+    if(day == '2') day = '02';
+    if(day == '3') day = '03';
+    if(day == '4') day = '04';
+    if(day == '5') day = '05';
+    if(day == '6') day = '06';
+    if(day == '7') day = '07';
+    if(day == '8') day = '08';
+    if(day == '9') day = '09';
+
+    let str = year + '-' + month + '-' + day;
+
+    const [date, setDate] = useState(str);
+    const [startTime, setStartTime] = useState("8:30");
+    const [endTime, setEndTime] = useState("9:00");
+    const [course, setCourse] = useState("ECOR 1010");
+    const [description, setDescription] = useState("");
+    const [maxParticipants, setMaxParticipants] = useState("10");
 
     function isTimeInvalid(time: String) {
         if (startTime === "") {
@@ -33,9 +72,68 @@ const RequestSession: FC<RequestSessionProps> = (props) => {
         select?.removeAttribute("disabled")
     }
 
+    //function that is invoked on submit 
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>){
+        event.preventDefault();
+        console.log("creating session...");
+        console.log("date: " + date); 
+        console.log("start time: " + startTime); 
+        console.log("end time: " + endTime); 
+        console.log("course: " + course);
+        console.log("description: " + description);
+        console.log("max participants: " + maxParticipants);
+
+        //must convert start and end time to "2023-06-25 17:00:00" format
+        let startStr = startTime;
+        let endStr = endTime;
+        if(startStr == '8:30') startStr = '08:30';
+        if(startStr == '9:00') startStr = '09:00';
+        if(startStr == '9:30') startStr = '09:30';
+        if(endStr == '8:30') endStr = '08:30';
+        if(endStr == '9:00') endStr = '09:00';
+        if(endStr == '9:30') endStr = '09:30';
+        startStr = date + ' ' + startStr + ':00';
+        endStr = date + ' ' + endStr + ':00';
+        
+        var sessionType = props.role === "student" ? "private" : "public";
+        var sessionStatus = props.role === "student" ? "requested" : "created";
+
+        // const response = fetch('https://lit-river-91932.herokuapp.com/login', {
+        //     method: 'GET',
+        //     mode: "cors",
+        //     headers: {
+        //         //'Access-Control-Allow-Origin': 'http://localhost:3000',
+        //         //'Origin': 'http://localhost:3000',
+        //         'id': 'bob@cmail.carleton.ca',
+        //         'password': '12345'
+        //     }
+        //   })
+        // .then((response) => response.json())
+        // .then((json) => console.log(json));
+
+        //send http post request to backend to create session
+        fetch("https://lit-river-91932.herokuapp.com/session", {
+        method: "POST",
+        body: JSON.stringify({
+            date: date,
+            startTime: startStr,
+            endTime: endStr,
+            course: course,
+            description: description,
+            numParticipants: maxParticipants,
+            sessionType: sessionType,
+            sessionStatus: sessionStatus,
+            userID: TEMP_SCHOLAR_ID // this is the id of the scholar requesting a prvate session or the id of a scholar creating a public session
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+        })
+    }
+
     return (
-        <form>
-            <h1 className='form-title'>{props.role === "student" ? "Request a Session" : "Create a Session"}</h1>
+        <form onSubmit={(event) => handleSubmit(event)}>
+            <h1 className='form-title'>{props.role === "student" ? "Request a Private Session" : "Create a Public Session"}</h1>
             <div className='form-container'>
                 <label htmlFor="date-input">Select a date:</label>
                 <input type="date" id="date-input" value={date} className="form-item" onChange={(e)=>setDate(e.target.value)}/>
@@ -84,6 +182,14 @@ const RequestSession: FC<RequestSessionProps> = (props) => {
                     <option value="MATH 1004">MATH 1004</option>
                     <option value="MATH 1104">MATH 1104</option>
                 </select>
+                <br/>
+                <label htmlFor="description">Session description:</label>
+                <input value={description} type="text" id="description" name="description" className="form-item" placeholder="description"
+                 onChange={(e)=>setDescription(e.target.value)}></input>
+                <br/>
+                <label htmlFor="maxParticipants">Max participants:</label>
+                <input value={maxParticipants} type="number" id="maxParticipants" name="maxParticipants" className="form-item" min="2" max="50"
+                 onChange={(e)=>setMaxParticipants(e.target.value)}></input>
                 <br/>
                 <input type="submit" value="Submit" className="submit-button"/>
             </div>

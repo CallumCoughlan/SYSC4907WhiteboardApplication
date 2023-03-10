@@ -7,17 +7,87 @@ type CalendarProps = {
     role: String;
 };
 
+var TEMP_USER_ID = "bob@cmail.carleton.ca";
+
+var privateSessionInfoMap = new Map<string, string[]>();
+var registeredPublicSessionInfoMap = new Map<string, string[]>();
+var nonRegisteredPublicSessionInfoMap = new Map<string, string[]>();
+
+//fetches information of all session from server
+function fetchSessionInfo() {
+    console.log("fetching session info...");
+    var jsonSessionInfo = null;
+    const request = new XMLHttpRequest();
+    request.open('GET', 'https://lit-river-91932.herokuapp.com/session', false);
+    request.setRequestHeader('user_id', TEMP_USER_ID);
+    request.send(null);
+    if (request.status === 200) {
+        jsonSessionInfo = JSON.parse(request.responseText);
+    }
+    //console.log(jsonSessionInfo['results'][0]['description']);
+
+    //clear previous previous hash maps
+    privateSessionInfoMap = new Map<string, string[]>();
+    registeredPublicSessionInfoMap = new Map<string, string[]>();
+    nonRegisteredPublicSessionInfoMap = new Map<string, string[]>();
+    
+    //convert json to a hashmap of string to list of json objects where the keys are dates
+    //repeat for privat sessions, registered public sessions and non registered public sessions
+    for (let index = 0; index < jsonSessionInfo['private_sessions'].length; index++) {
+        var date = jsonSessionInfo['private_sessions'][index]['date'];
+
+        if (privateSessionInfoMap.get(date) == null) {
+            privateSessionInfoMap.set(date, [jsonSessionInfo['private_sessions'][index]]);
+        } else {
+            // @ts-ignore
+            privateSessionInfoMap.get(date).push(jsonSessionInfo['private_sessions'][index]);
+        }
+    }
+
+    for (let index = 0; index < jsonSessionInfo['registered_public_sessions'].length; index++) {
+        var date = jsonSessionInfo['registered_public_sessions'][index]['date'];
+
+        if (registeredPublicSessionInfoMap.get(date) == null) {
+            registeredPublicSessionInfoMap.set(date, [jsonSessionInfo['registered_public_sessions'][index]]);
+        } else {
+            // @ts-ignore
+            registeredPublicSessionInfoMap.get(date).push(jsonSessionInfo['registered_public_sessions'][index]);
+        }
+    }
+
+    for (let index = 0; index < jsonSessionInfo['unregistered_public_sessions'].length; index++) {
+        var date = jsonSessionInfo['unregistered_public_sessions'][index]['date'];
+
+        if (nonRegisteredPublicSessionInfoMap.get(date) == null) {
+            nonRegisteredPublicSessionInfoMap.set(date, [jsonSessionInfo['unregistered_public_sessions'][index]]);
+        } else {
+            // @ts-ignore
+            nonRegisteredPublicSessionInfoMap.get(date).push(jsonSessionInfo['unregistered_public_sessions'][index]);
+        }
+    }
+}
+
+//fetch information of all session from server at the start
+//fetchSessionInfo();
+
+
 const Calendar: FC<CalendarProps> = (props) => {
     const [dates, setDates] = useState(new Map<number, number[][]>());
     const [weekViewSelected, setWeekViewSelected] = useState(false);
+    const [currentYear, setCurrentYear] = useState(0);
     const [currentMonth, setCurrentMonth] = useState(0);
     const [currentWeek, setCurrentWeek] = useState(0);
 
     useEffect(() => {
+        //fetch information of all session when useEffect runs
+        fetchSessionInfo();
+
         const currentDate = new Date();
         const month = currentDate.getMonth();
+        const year = currentDate.getFullYear();
 
         setCurrentMonth(month);
+        setCurrentYear(year);
 
         setDates(() => {
             var newDates;
@@ -25,7 +95,7 @@ const Calendar: FC<CalendarProps> = (props) => {
             if (month >= 8) {
                 //fall
                 newDates = getDates(new Date(currentDate.getFullYear(), 8, 1), new Date(currentDate.getFullYear(), 11, 31));
-            } else if (month >=4) {
+            } else if (month >= 4) {
                 //summer
                 newDates = getDates(new Date(currentDate.getFullYear(), 4, 1), new Date(currentDate.getFullYear(), 7, 31));
             } else {
@@ -33,10 +103,10 @@ const Calendar: FC<CalendarProps> = (props) => {
                 newDates = getDates(new Date(currentDate.getFullYear(), 0, 1), new Date(currentDate.getFullYear(), 3, 30));
             }
 
-            console.log(newDates);
+            // console.log(newDates);
             return newDates;
         });
-    
+
         function getDates(startDate: Date, endDate: Date) {
             var newDates = new Map<number, number[][]>();
             var month = 0;
@@ -50,7 +120,7 @@ const Calendar: FC<CalendarProps> = (props) => {
                 if (dayOfWeek === 0) {
                     datesOfWeek = [];
                 }
-                
+
                 if (dayOfMonth === 1) {
                     month = date.getMonth();
                     datesOfWeek = [];
@@ -91,7 +161,7 @@ const Calendar: FC<CalendarProps> = (props) => {
                 }
                 //console.log(dayOfMonth);
             }
-    
+
             return newDates;
         }
     }, []);
@@ -225,7 +295,7 @@ const Calendar: FC<CalendarProps> = (props) => {
                 break;
             }
         }
-        const date  = new Date();
+        const date = new Date();
         return monthString + " " + date.getFullYear();
     }
 
@@ -249,17 +319,204 @@ const Calendar: FC<CalendarProps> = (props) => {
         }
     }
 
+    //fetches the div for a particular date from privateSessionInfoMap, registeredPublicSessionInfoMap and nonRegisteredPublicSessionInfoMap
+    function getDaySessionsDiv(year: number, month: number, day: number, divClass: string) {
+        console.log("=========================================================");
+        let monthStr = month.toString();
+        let dayStr = day.toString();
+
+        //for some reason month values start from 0
+        if (monthStr == '0') monthStr = '01';
+        if (monthStr == '1') monthStr = '02';
+        if (monthStr == '2') monthStr = '03';
+        if (monthStr == '3') monthStr = '04';
+        if (monthStr == '4') monthStr = '05';
+        if (monthStr == '5') monthStr = '06';
+        if (monthStr == '6') monthStr = '07';
+        if (monthStr == '7') monthStr = '08';
+        if (monthStr == '8') monthStr = '09';
+        if (monthStr == '9') monthStr = '10';
+        if (monthStr == '10') monthStr = '11';
+        if (monthStr == '11') monthStr = '12';
+
+        if (dayStr == '1') dayStr = '01';
+        if (dayStr == '2') dayStr = '02';
+        if (dayStr == '3') dayStr = '03';
+        if (dayStr == '4') dayStr = '04';
+        if (dayStr == '5') dayStr = '05';
+        if (dayStr == '6') dayStr = '06';
+        if (dayStr == '7') dayStr = '07';
+        if (dayStr == '8') dayStr = '08';
+        if (dayStr == '9') dayStr = '09';
+
+        var dateStr = year + '-' + monthStr + '-' + dayStr + 'T00:00:00.000Z';
+        console.log("dateStr is " + dateStr);
+
+        var cond1 = privateSessionInfoMap.has(dateStr);
+        var cond2 = registeredPublicSessionInfoMap.has(dateStr);
+        var cond3 = nonRegisteredPublicSessionInfoMap.has(dateStr);
+
+        console.log(privateSessionInfoMap);
+        console.log(registeredPublicSessionInfoMap);
+        console.log(nonRegisteredPublicSessionInfoMap);
+
+        // if there are no sessions for that day just return empty div
+        if( !(cond1|| cond2 || cond3) ){
+            return(
+                <div className={divClass}>
+                {day}
+            </div>
+            );
+        }
+
+        //if a private session exists for that day
+        var hasPrivate = false;
+        if (cond1) {
+            hasPrivate = true;
+            // side note, for some reason if I call privateSessionInfoMap.get
+            // in this if statement then it crashes
+        }
+
+        //if a registered public session exists for that day
+        var hasRegisteredPublic = false;
+        if (cond2) {
+            hasRegisteredPublic = true;
+        }
+
+        //if a non registered public session exists for that day
+        var hasNonRegisteredPublic = false;
+        if (cond3) {
+            hasNonRegisteredPublic = true;
+        }
+
+        // @ts-ignore
+        var sessions = [];
+        if (hasPrivate) {
+            // @ts-ignore
+            sessions = sessions.concat(privateSessionInfoMap.get(dateStr));
+            console.log("bing 1");
+        }
+        if (hasRegisteredPublic) {
+            // @ts-ignore
+            sessions = sessions.concat(registeredPublicSessionInfoMap.get(dateStr));
+            console.log("bing 2");
+        }
+        if (hasNonRegisteredPublic) {
+            // @ts-ignore
+            sessions = sessions.concat(nonRegisteredPublicSessionInfoMap.get(dateStr));
+            console.log("bing 3");
+        }
+
+        const sessionDivs: JSX.Element[] = [];
+        const PublicRegisteredSessionField = ({ results }: { results: Array<String> }) => (
+            <div className='public-registered-div'>
+                {results[0]}             
+                <br></br>
+                {results[1]}
+                <button onClick={() => handleUnRegister(results[2])} className='un-register-button'>unregister</button>
+            </div>
+          );
+    
+        const PublicNonRegisteredSessionField = ({ results }: { results: Array<String> }) => (
+            <div className='public-non-registered-div'>
+                {results[0]}             
+                <br></br>
+                {results[1]}
+                <button onClick={() => handleRegister(results[2])} className='register-button'>register</button>
+            </div>
+        );
+
+        const PrivateSessionField = ({ results }: { results: Array<String> }) => (
+            <div className='private-div'>
+                {results[0]}
+                <br></br>
+                {results[1]}
+                <button onClick={() => handleUnRegister(results[2])} className='un-register-button'>unregister</button>
+            </div>
+          );
+
+        // @ts-ignore
+        for (var i = 0; i < sessions.length; i++) {
+
+            // @ts-ignore
+            var results = [sessions[i]['course_code'] + " " + sessions[i]['session_type'], sessions[i]['start_time'].slice(11).slice(0,-8) + " : "+ sessions[i]['end_time'].slice(11).slice(0,-8), sessions[i]['session_id']];
+
+            // @ts-ignore
+            if(sessions[i]['session_type'] == 'private'){
+                sessionDivs.push(<PrivateSessionField results={results}  />);
+            }else if(sessions[i]['id'] == TEMP_USER_ID){
+                sessionDivs.push(<PublicRegisteredSessionField results={results}  />);
+            }else{
+                sessionDivs.push(<PublicNonRegisteredSessionField results={results}  />);
+            }
+        }
+
+        // var results = [course, description, start, end, type];
+        return (
+            <div className={divClass}>
+                {day}
+                {sessionDivs}
+            </div>
+        );
+    }
+
+    // when user clicks on "register" button for public session
+    function handleRegister(sessionId : String){
+        console.log("registering for session " + sessionId);
+
+        //send http post request to backend to unregister
+        fetch("https://lit-river-91932.herokuapp.com/register-session", {
+            method: "POST",
+            body: JSON.stringify({
+                registerOrUnregister: "register",
+                userid: TEMP_USER_ID,
+                sessionid: sessionId
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+            })
+
+        console.log("successfully registered")
+        fetchSessionInfo();
+        window.location.reload();
+
+    }
+
+    // when user clicks on "unregister" button for a session
+    function handleUnRegister(sessionId : String){
+        console.log("unregistering for session " + sessionId);
+
+        //send http post request to backend to unregister
+        fetch("https://lit-river-91932.herokuapp.com/register-session", {
+        method: "POST",
+        body: JSON.stringify({
+            registerOrUnregister: "unregister",
+            userid: TEMP_USER_ID,
+            sessionid: sessionId
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+        })
+
+        console.log("successfully unregistered")
+        fetchSessionInfo();
+        window.location.reload();
+
+    }
+
     return (
         <>
             <div className='header'>
-                <h2>My Sessions</h2>
+                <h1>Sessions</h1>
                 <div className='view-toggle'>
                     <div className='view-toggle-item' onClick={changeToWeekView}>Week</div>
                     <div className='view-toggle-item' onClick={changeToMonthView}>Month</div>
                 </div>
                 <div className='header-top-right'>
                     <Link to={props.role === "student" ? "/request-session" : "/create-session"}>
-                        <button className='request-session-button' onClick={handleClick}>{props.role === "student" ? "Request a Session" : "Create a Session"}</button>
+                        <button className='request-session-button' onClick={handleClick}>{props.role === "student" ? "Request a Private Session" : "Create a Public Session"}</button>
                     </Link>
                     {props.role === "scholar" ?
                         (
@@ -281,50 +538,56 @@ const Calendar: FC<CalendarProps> = (props) => {
                     </div>
                 </div>
                 <div className='calendar-grid'>
-                    {weekViewSelected ? 
+                    {weekViewSelected ?
                         (
-                            dates.get(currentMonth)![currentWeek].map((day)=>{
+                            dates.get(currentMonth)![currentWeek].map((day) => {
                                 const currentDate = new Date();
                                 if (day === currentDate.getDate() && currentMonth === currentDate.getMonth()) {
                                     if (!(currentDate.getDate() > 20 && currentWeek === 0) && !(currentDate.getDate() < 7 && currentWeek > 1)) {
-                                        return (
-                                            <div className='day week current'>{day}</div>
-                                        );
+                                        var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day week current');
+                                        return(results);
                                     } else {
-                                        return (
-                                            <div className='day week'>{day}</div>
-                                        );
+                                        var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day week');
+                                        return(results);
                                     }
                                 } else {
-                                    return (
-                                        <div className='day week'>{day}</div>
-                                    );
+                                    var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day week');
+                                    return(results);
                                 }
                             })
                         )
                         :
                         (
-                            dates.get(currentMonth)?.map((days, index)=>{
+                            dates.get(currentMonth)?.map((days, index) => {
                                 const currentDate = new Date();
-                                return days.map((day)=>{
+                                return days.map((day) => {
                                     if ((index === 0 && day > 7) || (index > 2 && day < 7)) {
-                                        return (
-                                            <div className='day other-month'>{day}</div>
-                                        );
+                                        var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day other-month');
+                                        return(<div className='day other-month'>{day}<br/>TODO SHOW SESSIONS FOR OTHER MONTH</div>);
+                                        //need to break up the 1 parts of the if statement where the first part indicates
+                                        //previous month and second part indicates next month
+                                        //return(results);
                                     } else if (day === currentDate.getDate() && currentMonth === currentDate.getMonth()) {
-                                        return (
-                                            <div className='day current'>{day}</div>
-                                        );
+                                        var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day current');
+                                        return(results);
                                     } else {
-                                        return (
-                                            <div className='day'>{day}</div>
-                                        );
+                                        var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day');
+                                        return(results);
                                     }
                                 });
                             })
                         )
                     }
                 </div>
+
+                <h3>Legend</h3>
+                blue = public session you have not registered for
+                <br></br>
+                green = public session you have registered for
+                <br></br>
+                orange = private session you have registered for
+                <br></br>
+                TODO MAKE LEGEND LOOK PRETTY
             </div>
         </>
     );
