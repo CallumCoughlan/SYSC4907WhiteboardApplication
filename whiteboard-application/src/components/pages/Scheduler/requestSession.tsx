@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import './style.css'
 //import Axios from "axios";
 
+var TEMP_SCHOLAR_ID = "alice@cmail.carleton.ca";
 
 
 type RequestSessionProps = {
@@ -122,7 +123,7 @@ const RequestSession: FC<RequestSessionProps> = (props) => {
             numParticipants: maxParticipants,
             sessionType: sessionType,
             sessionStatus: sessionStatus,
-            userID: "bob@cmail.carleton.ca"
+            userID: TEMP_SCHOLAR_ID // this is the id of the scholar requesting a prvate session or the id of a scholar creating a public session
         }),
         headers: {
             "Content-type": "application/json; charset=UTF-8"
