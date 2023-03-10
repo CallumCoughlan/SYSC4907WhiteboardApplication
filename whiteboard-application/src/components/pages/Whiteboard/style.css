@@ -228,3 +228,8 @@ table, th, td {
     width: 200px;
     height: 40px;
 }
+
+#incorrectInput {
+    color: rgb(240, 0, 0);
+    margin-bottom: 10px;
+}
