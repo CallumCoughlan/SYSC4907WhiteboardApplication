@@ -87,19 +87,31 @@
     border-right: black 1px solid;
 }
 
-.public-div {
-    background-color: rgb(79, 195, 241);
+.public-non-registered-div {
+    background-color: rgb(110, 207, 245);
     border-top: black 1px solid;
     border-bottom: black 1px solid;
     font-size:100%;
 }
 
-.public-div:hover {
+.public-non-registered-div:hover {
     background-color: rgb(60, 147, 182);
 }
 
+.public-registered-div {
+    background-color: rgb(43, 252, 88);
+    border-top: black 1px solid;
+    border-bottom: black 1px solid;
+    font-size:100%;
+}
+
+.public-registered-div:hover {
+    background-color: rgb(31, 192, 66);
+}
+
+
 .private-div {
-    background-color: rgb(231, 160, 78);
+    background-color: rgb(250, 185, 112);
     border-top: black 1px solid;
     border-bottom: black 1px solid;
     font-size:100%;
@@ -107,4 +119,39 @@
 
 .private-div:hover {
     background-color: rgb(190, 128, 56);
+}
+
+.register-button {
+    background-color: rgb(184, 255, 193);
+    border-top: black 1px solid;
+    border-bottom: black 1px solid;
+    position: relative;
+    left: 20px;
+    font-size:100%;
+}
+.register-button:hover {
+    background-color: rgb(126, 177, 133);
+    border-top: black 1px solid;
+    border-bottom: black 1px solid;
+    position: relative;
+    left: 20px;
+    font-size:100%;
+}
+
+.un-register-button {
+    background-color: rgb(255, 184, 184);
+    border-top: black 1px solid;
+    border-bottom: black 1px solid;
+    position: relative;
+    left: 20px;
+    font-size:100%;
+}
+
+.un-register-button:hover {
+    background-color: rgb(185, 133, 133);
+    border-top: black 1px solid;
+    border-bottom: black 1px solid;
+    position: relative;
+    left: 20px;
+    font-size:100%;
 }
