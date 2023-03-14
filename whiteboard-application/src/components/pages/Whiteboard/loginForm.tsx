@@ -25,7 +25,7 @@ function LoginForm(props: any) {
         var response = JSON.parse(request.responseText);
 
         if (response.status == "valid") {
-            props.emailID = email; 
+            //props.emailID = email; 
             if (response.role == "admin") {
                 return navigate("/adminPage");
             } else {
