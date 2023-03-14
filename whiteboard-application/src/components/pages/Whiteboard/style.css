@@ -201,7 +201,7 @@ table, th, td {
 
 .col1 {
     text-align: center;
-    width: 500px;
+    width: 400px;
     height: 40px;
 }
 
@@ -227,6 +227,20 @@ table, th, td {
     text-align: center;
     width: 200px;
     height: 40px;
+}
+
+.publicSessionsCol {
+    text-align: center;
+    width: 420px;
+    height: 40px;
+    vertical-align: top;
+}
+
+.privateSessionsCol {
+    text-align: center;
+    width: 420px;
+    height: 40px;
+    vertical-align: top;
 }
 
 #incorrectInput {
