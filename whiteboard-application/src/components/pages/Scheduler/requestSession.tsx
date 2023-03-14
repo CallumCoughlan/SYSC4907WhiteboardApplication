@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import './style.css'
 //import Axios from "axios";
 
-var TEMP_SCHOLAR_ID = "alice@cmail.carleton.ca";
+var TEMP_SCHOLAR_ID = "jesus@cmail.carleton.ca";
+//var TEMP_SCHOLAR_ID = "bob@cmail.carleton.ca";
 
 
 type RequestSessionProps = {
@@ -129,6 +130,9 @@ const RequestSession: FC<RequestSessionProps> = (props) => {
             "Content-type": "application/json; charset=UTF-8"
         }
         })
+        
+        var message = props.role === "student" ? "Private session request has been created" : "Public session has been created";
+        alert(message);
     }
 
     return (

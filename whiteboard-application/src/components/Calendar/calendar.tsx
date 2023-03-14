@@ -560,17 +560,20 @@ const Calendar: FC<CalendarProps> = (props) => {
                             dates.get(currentMonth)?.map((days, index) => {
                                 const currentDate = new Date();
                                 return days.map((day) => {
-                                    if ((index === 0 && day > 7) || (index > 2 && day < 7)) {
-                                        var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day other-month');
-                                        return(<div className='day other-month'>{day}<br/>TODO SHOW SESSIONS FOR OTHER MONTH</div>);
-                                        //need to break up the 1 parts of the if statement where the first part indicates
-                                        //previous month and second part indicates next month
-                                        //return(results);
-                                    } else if (day === currentDate.getDate() && currentMonth === currentDate.getMonth()) {
+                                    if (index === 0 && day > 7) { // previous month
+                                        var results = getDaySessionsDiv(currentYear, currentMonth - 1 , day, 'day other-month');
+                                        return(results);
+
+                                    } else if (index > 2 && day < 7){ // next month
+                                        var results = getDaySessionsDiv(currentYear, currentMonth + 1 , day, 'day other-month');
+                                        return(results);
+
+                                    }else if (day === currentDate.getDate() && currentMonth === currentDate.getMonth()) { // current day
                                         var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day current');
                                         return(results);
+
                                     } else {
-                                        var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day');
+                                        var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day'); // current month
                                         return(results);
                                     }
                                 });
