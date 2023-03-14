@@ -5,7 +5,9 @@ import { useNavigate } from "react-router-dom";
 
 import './style.css';
 
-function LoginForm(props: any) { 
+export var globalVarEmail: any;
+
+function LoginForm() { 
     const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
@@ -25,7 +27,7 @@ function LoginForm(props: any) {
         var response = JSON.parse(request.responseText);
 
         if (response.status == "valid") {
-            //props.emailID = email; 
+            globalVarEmail = email;
             if (response.role == "admin") {
                 return navigate("/adminPage");
             } else {

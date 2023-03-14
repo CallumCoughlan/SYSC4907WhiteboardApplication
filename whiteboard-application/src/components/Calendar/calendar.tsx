@@ -1,13 +1,12 @@
 import { FC, useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
+import { globalVarEmail } from '../pages/Whiteboard/loginForm';
 
 import './style.css'
 
 type CalendarProps = {
     role: String;
 };
-
-var TEMP_USER_ID = "bob@cmail.carleton.ca";
 
 var privateSessionInfoMap = new Map<string, string[]>();
 var registeredPublicSessionInfoMap = new Map<string, string[]>();
@@ -19,7 +18,7 @@ function fetchSessionInfo() {
     var jsonSessionInfo = null;
     const request = new XMLHttpRequest();
     request.open('GET', 'https://lit-river-91932.herokuapp.com/session', false);
-    request.setRequestHeader('user_id', TEMP_USER_ID);
+    request.setRequestHeader('user_id', globalVarEmail);
     request.send(null);
     if (request.status === 200) {
         jsonSessionInfo = JSON.parse(request.responseText);
@@ -444,7 +443,7 @@ const Calendar: FC<CalendarProps> = (props) => {
             // @ts-ignore
             if(sessions[i]['session_type'] == 'private'){
                 sessionDivs.push(<PrivateSessionField results={results}  />);
-            }else if(sessions[i]['id'] == TEMP_USER_ID){
+            }else if(sessions[i]['id'] == globalVarEmail){
                 sessionDivs.push(<PublicRegisteredSessionField results={results}  />);
             }else{
                 sessionDivs.push(<PublicNonRegisteredSessionField results={results}  />);
@@ -469,7 +468,7 @@ const Calendar: FC<CalendarProps> = (props) => {
             method: "POST",
             body: JSON.stringify({
                 registerOrUnregister: "register",
-                userid: TEMP_USER_ID,
+                userid: globalVarEmail,
                 sessionid: sessionId
             }),
             headers: {
@@ -487,27 +486,23 @@ const Calendar: FC<CalendarProps> = (props) => {
     function handleUnRegister(sessionId : String){
         console.log("unregistering for session " + sessionId);
 
-        if (window.confirm("Are you sure you want to unregister?")) {
-            //send http post request to backend to unregister
-            fetch("https://lit-river-91932.herokuapp.com/register-session", {
-                method: "POST",
-                body: JSON.stringify({
-                    registerOrUnregister: "unregister",
-                    userid: TEMP_USER_ID,
-                    sessionid: sessionId
-                }),
-                headers: {
-                    "Content-type": "application/json; charset=UTF-8"
-                }
-                })
-        
-                console.log("successfully unregistered")
-                fetchSessionInfo();
-                window.location.reload();
+        //send http post request to backend to unregister
+        fetch("https://lit-river-91932.herokuapp.com/register-session", {
+        method: "POST",
+        body: JSON.stringify({
+            registerOrUnregister: "unregister",
+            userid: globalVarEmail,
+            sessionid: sessionId
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+        })
 
-          } else {
-            console.log("action canceled")
-          }
+        console.log("successfully unregistered")
+        fetchSessionInfo();
+        window.location.reload();
+
     }
 
     return (
