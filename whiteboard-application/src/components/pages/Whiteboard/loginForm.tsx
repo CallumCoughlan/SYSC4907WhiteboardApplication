@@ -28,7 +28,7 @@ function LoginForm() {
             sessionStorage.setItem("currentUserEmail", email);
             if (response.role == "admin") {
                 sessionStorage.setItem("currentUserRole", "admin");
-                return navigate("/adminPage");
+                return navigate("/home");
             } else if(response.role == "scholar") {
                 sessionStorage.setItem("currentUserRole", "scholar");
                 return navigate("/home");

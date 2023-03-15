@@ -1,6 +1,6 @@
 import React from 'react';
 import {  Link } from "react-router-dom";
-const navBar= () =>{
+const adminNavBar= () =>{
   return (
     <div className='sidebar'>
         <div className="cuLogo" style={{textAlign:'center'}}>
@@ -8,16 +8,21 @@ const navBar= () =>{
             <h2> cuWhiteBoard </h2>
         </div>
         <ul>
-            <Link to="/adminPage" style={{ color: 'inherit', textDecoration: 'none' }}>
+            <Link to="/home" style={{ color: 'inherit', textDecoration: 'none' }}>
                 <li>
                     <span className="item">Home</span>
                 </li>
             </Link>
-            {/* <Link to="/adminAssignSessions" style={{ color: 'inherit', textDecoration: 'none' }}>
+            <Link to="/create-session" style={{ color: 'inherit', textDecoration: 'none' }}>
                 <li>
-                    <span className="item">Assign Sessions</span>
+                    <span className='item'>Create a Public Session</span>
                 </li>
-            </Link> */}
+            </Link>
+            <Link to="/adminAssignSessions" style={{ color: 'inherit', textDecoration: 'none' }}>
+                <li>
+                    <span className="item">Assign Private Sessions</span>
+                </li>
+            </Link>
             <Link to="/adminScholarList" style={{ color: 'inherit', textDecoration: 'none' }}>
                 <li>
                     <span className="item">Scholars</span>
@@ -42,4 +47,4 @@ const navBar= () =>{
     </div>
   );
 }
-export default navBar;
+export default adminNavBar;

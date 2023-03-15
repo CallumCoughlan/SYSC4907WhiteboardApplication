@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Link } from "react-router-dom";
-import { NavBar } from '../../Whiteboard';
+import { AdminNavBar } from '../../Whiteboard';
 import './style.css';
 
 
@@ -69,7 +69,7 @@ function AdminScholarList() {
 
     return (
         <div className='wrapper'>
-            <NavBar/>
+            <AdminNavBar/>
             <div className="mainMenu">
                 <table>
                     <thead> 
