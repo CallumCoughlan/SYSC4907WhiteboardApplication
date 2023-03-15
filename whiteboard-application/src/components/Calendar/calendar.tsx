@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
-import { globalVarEmail } from '../pages/Whiteboard/loginForm';
+import { CalendarNavBar } from '.';
+//import { globalVarEmail } from '../pages/Whiteboard/loginForm';
 
 import './style.css'
 
@@ -14,11 +15,14 @@ var nonRegisteredPublicSessionInfoMap = new Map<string, string[]>();
 
 //fetches information of all session from server
 function fetchSessionInfo() {
-    console.log("fetching session info...");
+
+
+    console.log("fetching session info for " + sessionStorage.getItem("currentUserEmail"));
     var jsonSessionInfo = null;
     const request = new XMLHttpRequest();
     request.open('GET', 'https://lit-river-91932.herokuapp.com/session', false);
-    request.setRequestHeader('user_id', globalVarEmail);
+    // @ts-ignore
+    request.setRequestHeader('user_id', sessionStorage.getItem("currentUserEmail"));
     request.send(null);
     if (request.status === 200) {
         jsonSessionInfo = JSON.parse(request.responseText);
@@ -443,7 +447,7 @@ const Calendar: FC<CalendarProps> = (props) => {
             // @ts-ignore
             if(sessions[i]['session_type'] == 'private'){
                 sessionDivs.push(<PrivateSessionField results={results}  />);
-            }else if(sessions[i]['id'] == globalVarEmail){
+            }else if(sessions[i]['id'] == sessionStorage.getItem("currentUserEmail")){
                 sessionDivs.push(<PublicRegisteredSessionField results={results}  />);
             }else{
                 sessionDivs.push(<PublicNonRegisteredSessionField results={results}  />);
@@ -468,7 +472,7 @@ const Calendar: FC<CalendarProps> = (props) => {
             method: "POST",
             body: JSON.stringify({
                 registerOrUnregister: "register",
-                userid: globalVarEmail,
+                userid: sessionStorage.getItem("currentUserEmail"),
                 sessionid: sessionId
             }),
             headers: {
@@ -491,7 +495,7 @@ const Calendar: FC<CalendarProps> = (props) => {
         method: "POST",
         body: JSON.stringify({
             registerOrUnregister: "unregister",
-            userid: globalVarEmail,
+            userid: sessionStorage.getItem("currentUserEmail"),
             sessionid: sessionId
         }),
         headers: {
@@ -506,92 +510,94 @@ const Calendar: FC<CalendarProps> = (props) => {
     }
 
     return (
-        <>
-            <div className='header'>
-                <h1>Sessions</h1>
-                <div className='view-toggle'>
-                    <div className='view-toggle-item' onClick={changeToWeekView}>Week</div>
-                    <div className='view-toggle-item' onClick={changeToMonthView}>Month</div>
-                </div>
-                <div className='header-top-right'>
-                    <Link to={props.role === "student" ? "/request-session" : "/create-session"}>
-                        <button className='request-session-button' onClick={handleClick}>{props.role === "student" ? "Request a Private Session" : "Create a Public Session"}</button>
-                    </Link>
-                    {props.role === "scholar" ?
-                        (
-                            <Link to="/set-availability">
-                                <button className='request-session-button' onClick={handleClick}>Set Availability</button>
-                            </Link>
-                        )
-                        :
-                        null
-                    }
-                </div>
-            </div>
-            <div className='calendar'>
-                <div className='calendar-header'>
-                    {weekViewSelected ? <div>{getWeekString()}</div> : <div>{getMonthString(currentMonth)}</div>}
-                    <div className='calendar-navigation'>
-                        <div className='calendar-navigation-item' onClick={goToPrevious}>Previous</div>
-                        <div className='calendar-navigation-item' onClick={goToNext}>Next</div>
+        <div className='wrapper'>
+            <CalendarNavBar/>
+            <div className='content'>
+                <div className='header'>
+                    <h1>Sessions</h1>
+                    <div className='view-toggle'>
+                        <div className='view-toggle-item-weekly' onClick={changeToWeekView}>Weekly View</div>
+                        <div className='view-toggle-item-monthly' onClick={changeToMonthView}>Monthly View</div>
                     </div>
+                    <div className='header-top-right'>
+
+                        currently logged in as: <b>{sessionStorage.getItem("currentUserEmail")}</b> 
+                        <br/>
+                        role: <b>{sessionStorage.getItem("currentUserRole")}</b> 
+                    </div>
+
                 </div>
-                <div className='calendar-grid'>
-                    {weekViewSelected ?
-                        (
-                            dates.get(currentMonth)![currentWeek].map((day) => {
-                                const currentDate = new Date();
-                                if (day === currentDate.getDate() && currentMonth === currentDate.getMonth()) {
-                                    if (!(currentDate.getDate() > 20 && currentWeek === 0) && !(currentDate.getDate() < 7 && currentWeek > 1)) {
-                                        var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day week current');
-                                        return(results);
+                <div className='calendar'>
+                    <div className='calendar-header'>
+                        {weekViewSelected ? <div>{getWeekString()}</div> : <div>{getMonthString(currentMonth)}</div>}
+                        <div className='calendar-navigation'>
+                            <div className='calendar-navigation-item' onClick={goToPrevious}>Previous</div>
+                            <div className='calendar-navigation-item' onClick={goToNext}>Next</div>
+                        </div>
+                    </div>
+                    <div className='calendar-grid'>
+                        {weekViewSelected ?
+                            (
+                                dates.get(currentMonth)![currentWeek].map((day) => {
+                                    const currentDate = new Date();
+                                    if (day === currentDate.getDate() && currentMonth === currentDate.getMonth()) {
+                                        if (!(currentDate.getDate() > 20 && currentWeek === 0) && !(currentDate.getDate() < 7 && currentWeek > 1)) {
+                                            var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day week current');
+                                            return(results);
+                                        } else {
+                                            var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day week');
+                                            return(results);
+                                        }
                                     } else {
                                         var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day week');
                                         return(results);
                                     }
-                                } else {
-                                    var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day week');
-                                    return(results);
-                                }
-                            })
-                        )
-                        :
-                        (
-                            dates.get(currentMonth)?.map((days, index) => {
-                                const currentDate = new Date();
-                                return days.map((day) => {
-                                    if (index === 0 && day > 7) { // previous month
-                                        var results = getDaySessionsDiv(currentYear, currentMonth - 1 , day, 'day other-month');
-                                        return(results);
+                                })
+                            )
+                            :
+                            (
+                                dates.get(currentMonth)?.map((days, index) => {
+                                    const currentDate = new Date();
+                                    return days.map((day) => {
+                                        if (index === 0 && day > 7) { // previous month
+                                            var results = getDaySessionsDiv(currentYear, currentMonth - 1 , day, 'day other-month');
+                                            return(results);
 
-                                    } else if (index > 2 && day < 7){ // next month
-                                        var results = getDaySessionsDiv(currentYear, currentMonth + 1 , day, 'day other-month');
-                                        return(results);
+                                        } else if (index > 2 && day < 7){ // next month
+                                            var results = getDaySessionsDiv(currentYear, currentMonth + 1 , day, 'day other-month');
+                                            return(results);
 
-                                    }else if (day === currentDate.getDate() && currentMonth === currentDate.getMonth()) { // current day
-                                        var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day current');
-                                        return(results);
+                                        }else if (day === currentDate.getDate() && currentMonth === currentDate.getMonth()) { // current day
+                                            var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day current');
+                                            return(results);
 
-                                    } else {
-                                        var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day'); // current month
-                                        return(results);
-                                    }
-                                });
-                            })
-                        )
-                    }
+                                        } else {
+                                            var results = getDaySessionsDiv(currentYear, currentMonth, day, 'day'); // current month
+                                            return(results);
+                                        }
+                                    });
+                                })
+                            )
+                        }
+                    </div>
+
+                    <h3>Legend</h3>
+                    
+                    <div className='blue-square'></div> 
+                    <a className='legend'> Public session you have not registered for</a>
+                    <br></br>
+                    <br></br>
+                    <div className='green-square'></div>
+                    <a className='legend'> Public session you have registered for</a>
+                    <br></br>
+                    <br></br>
+                    <div className='orange-square'></div>
+                    <a className='legend'> Public session you have registered for</a>
+                    <br></br>
                 </div>
-
-                <h3>Legend</h3>
-                blue = public session you have not registered for
-                <br></br>
-                green = public session you have registered for
-                <br></br>
-                orange = private session you have registered for
-                <br></br>
-                TODO MAKE LEGEND LOOK PRETTY
             </div>
-        </>
+           
+        </div>
     );
 };
 
