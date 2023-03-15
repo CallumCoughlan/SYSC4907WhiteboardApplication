@@ -1,10 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './style.css'
-//import Axios from "axios";
-
-var TEMP_SCHOLAR_ID = "jesus@cmail.carleton.ca";
-//var TEMP_SCHOLAR_ID = "bob@cmail.carleton.ca";
+//import { globalVarEmail } from '../../pages/Whiteboard/loginForm';
 
 
 type RequestSessionProps = {
@@ -124,7 +121,7 @@ const RequestSession: FC<RequestSessionProps> = (props) => {
             numParticipants: maxParticipants,
             sessionType: sessionType,
             sessionStatus: sessionStatus,
-            userID: TEMP_SCHOLAR_ID // this is the id of the scholar requesting a prvate session or the id of a scholar creating a public session
+            userID: sessionStorage.getItem("currentUserEmail") // this is the id of the scholar requesting a prvate session or the id of a scholar creating a public session
         }),
         headers: {
             "Content-type": "application/json; charset=UTF-8"

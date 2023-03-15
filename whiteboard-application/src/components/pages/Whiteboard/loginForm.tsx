@@ -5,8 +5,6 @@ import { useNavigate } from "react-router-dom";
 
 import './style.css';
 
-export var globalVarEmail: any;
-
 function LoginForm() { 
     const navigate = useNavigate();
 
@@ -27,10 +25,15 @@ function LoginForm() {
         var response = JSON.parse(request.responseText);
 
         if (response.status == "valid") {
-            globalVarEmail = email;
+            sessionStorage.setItem("currentUserEmail", email);
             if (response.role == "admin") {
+                sessionStorage.setItem("currentUserRole", "admin");
                 return navigate("/adminPage");
-            } else {
+            } else if(response.role == "scholar") {
+                sessionStorage.setItem("currentUserRole", "scholar");
+                return navigate("/home");
+            } else{
+                sessionStorage.setItem("currentUserRole", "student");
                 return navigate("/home");
             }
         } else {
