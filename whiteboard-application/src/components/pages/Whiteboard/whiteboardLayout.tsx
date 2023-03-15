@@ -6,7 +6,7 @@ import { Whiteboard, Toolbar, MessageWindow } from '../../Whiteboard';
 
 import LoginForm from './loginForm';
 import RegisterForm from './registrationForm';
-import AdminForm from './adminForm';
+// import AdminForm from './adminForm';
 import AdminAssignSess from './adminAssignSess';
 import AdminScholarList from './adminScholarList';
 import AdminStudentList from './adminStudentList';
@@ -27,7 +27,7 @@ const WhiteboardLayout: FC = () => (
             <Route path='/request-session' element={<RequestSession role="student"/>}/>
             <Route path='/create-session' element={<RequestSession role="scholar"/>}/>
             <Route path='/set-availability' element={<SetAvailability/>}/>
-            <Route path="/adminPage" element={<AdminForm/>}/>
+            {/* <Route path="/adminPage" element={<AdminForm/>}/> */}
             <Route path="/adminAssignSessions" element={<AdminAssignSess/>}/>
             <Route path="/adminScholarList" element={<AdminScholarList/>}/>
             <Route path="/adminStudentList" element={<AdminStudentList/>}/>

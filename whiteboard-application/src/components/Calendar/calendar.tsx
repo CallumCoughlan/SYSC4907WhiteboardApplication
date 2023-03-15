@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import { CalendarNavBar } from '.';
-//import { globalVarEmail } from '../pages/Whiteboard/loginForm';
+import { AdminNavBar } from '../Whiteboard';
 
 import './style.css'
 
@@ -511,7 +511,7 @@ const Calendar: FC<CalendarProps> = (props) => {
 
     return (
         <div className='wrapper'>
-            <CalendarNavBar/>
+            {sessionStorage.getItem("currentUserRole") == "admin" ? <AdminNavBar/> : <CalendarNavBar/>}
             <div className='content'>
                 <div className='header'>
                     <h1>Sessions</h1>
