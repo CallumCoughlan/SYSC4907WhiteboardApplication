@@ -3,17 +3,32 @@ import { Reducer, useReducer } from "react";
 import { fabric } from "fabric"
 import { State, Action } from "../types/whiteboard";
 import { blue } from "@mui/material/colors";
-
-
-
+const io = require('socket.io-client');
 
 var firstIter = true;
+const socket = io.connect("http://localhost:5001");
 const reducer: Reducer<State, Action> = (state, action) => {
   console.log("current tool:" + state.toolType)
 
+  socket.on("whiteboard-data", function(data: JSON) {
+    console.log("We are here")
+    console.log(data)
+      if (data === null) {
+        console.log("Its null");
+      }
+      // parse the data into the canvas
+      if (state.canvas !== null && data !== null) {
+        state.canvas.loadFromJSON('{"version":"5.2.4","objects":[{"type":"line","version":"5.2.4","originX":"left","originY":"top","left":204,"top":129.09,"width":48,"height":166,"fill":"rgb(0,0,0)","stroke":"#000000","strokeWidth":6,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":false,"strokeMiterLimit":4,"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"x1":-24,"x2":24,"y1":-83,"y2":83}],"background":"#FFFFFF","backgroundImage":{"type":"image","version":"5.2.4","originX":"left","originY":"top","left":0,"top":0,"width":1108,"height":620,"fill":"rgb(0,0,0)","stroke":null,"strokeWidth":0,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":false,"strokeMiterLimit":4,"scaleX":1.35,"scaleY":1.35,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"cropX":0,"cropY":0,"src":"https://i.stack.imgur.com/f6vGv.png","crossOrigin":null,"filters":[]}}', function() {
+        // re-render the canvas
+        state.canvas!.renderAll();
+        state.canvas!.calcOffset();
+        })
+      }
+    });
+
   //todo, figure out why the reducer is being called twice
 
-  switch (action.type) {
+  switch (action.type) {  
 
     //======================================
     //        Case 1 initialization
@@ -102,6 +117,9 @@ const reducer: Reducer<State, Action> = (state, action) => {
         state.isDrawingMode = isDrawingMode;
         state.canvas.isDrawingMode = isDrawingMode;
       }
+
+      var json = JSON.stringify(state.canvas);
+      socket.emit("whiteboard-data", json);
       return { ...state };
     }
 
@@ -376,6 +394,8 @@ const reducer: Reducer<State, Action> = (state, action) => {
         state.canvas.requestRenderAll();
      });
 
+      var json = JSON.stringify(state.canvas);
+      socket.emit("whiteboard-data", json);
       return state;
     }
 
@@ -396,6 +416,9 @@ const reducer: Reducer<State, Action> = (state, action) => {
         state.canvas?.remove(object);
       });
       state.canvas.discardActiveObject().renderAll();
+
+      var json = JSON.stringify(state.canvas);
+      socket.emit("whiteboard-data", json);
 
       return state;
     }
@@ -488,7 +511,8 @@ function addLineMouseListeners(state: State) {
     //state.canvas.discardActiveObject();
     state.canvas.selection = true;
 
-    //todo, send the new line to the server???
+    var json = JSON.stringify(state.canvas);
+    socket.emit("whiteboard-data", json);
   });
 }
 
@@ -608,7 +632,8 @@ function addArrowMouseListeners(state: State) {
     state.canvas.discardActiveObject();
     state.canvas.selection = true;
 
-    //todo, send the new line to the server???
+    var json = JSON.stringify(state.canvas);
+    socket.emit("whiteboard-data", json);
   });
 }
 
@@ -684,7 +709,8 @@ function addCircleMouseListeners(state: State) {
     state.canvas.discardActiveObject();
     //state.canvas.selection = true;
 
-    //todo, send the new circle to the server???
+    var json = JSON.stringify(state.canvas);
+    socket.emit("whiteboard-data", json);
   });
 }
 
@@ -761,9 +787,8 @@ function addRectangleMouseListeners(state: State) {
     }
     isDown = false;
     state.canvas.discardActiveObject();
-    //state.canvas.selection = true;
-
-    //todo, send the new recangle to the server???
+    var json = JSON.stringify(state.canvas);
+    socket.emit("whiteboard-data", json);
   });
 }
 
@@ -833,9 +858,8 @@ function addTextBoxMouseListeners(state: State) {
     }
     isDown = false;
     state.canvas.discardActiveObject();
-    //state.canvas.selection = true;
-
-    //todo, send the new recangle to the server???
+    var json = JSON.stringify(state.canvas);
+    socket.emit("whiteboard-data", json);
   });
 }
 
