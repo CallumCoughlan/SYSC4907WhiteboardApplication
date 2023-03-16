@@ -95,7 +95,7 @@ function AdminAssignSess() {
 
         const request = new XMLHttpRequest();
 
-        request.open('GET', 'http://localhost:5000/available-scholars', false);
+        request.open('GET', 'https://lit-river-91932.herokuapp.com/available-scholars', false);
         request.setRequestHeader("session-date", date);
         request.setRequestHeader("start", startTime);
         request.setRequestHeader("end", endTime);
@@ -119,7 +119,7 @@ function AdminAssignSess() {
     function handleSelect(scholarID: string) {
         console.log(scholarID);
 
-        fetch("http://localhost:5000/requested-session", {
+        fetch("https://lit-river-91932.herokuapp.com/requested-session", {
         method: "POST",
         body: JSON.stringify({
             userID: scholarID,
