@@ -17,6 +17,17 @@ function convertTime(time: string) {
     return convertedTime
 }
 
+function handleDemote(scholarID:string) {
+    console.log("demoting" + scholarID);
+    const request = new XMLHttpRequest();
+
+    request.open('POST', 'https://lit-river-91932.herokuapp.com/demote_scholar', false);
+    request.setRequestHeader('user_id', scholarID);
+    request.send();
+
+    window.location.reload();
+}
+
 // fetches all the public or private scholar sessions and returns a table body with the results
 function fetchScholarSessionsTableBody(scholarID: string, publicOrPrivate: string){
     var jsonSessionInfo = null;
@@ -78,6 +89,7 @@ function AdminScholarList() {
                             <th className='col2'>Availability</th>
                             <th className='publicSessionsCol'>Public Sessions</th>
                             <th className='privateSessionsCol'>Private Sessions</th>
+                            <th className='col3'>Demote To Student</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -114,6 +126,9 @@ function AdminScholarList() {
                                             </thead>
                                             {privateResults}
                                         </table>
+                                    </td>
+                                    <td className='col3'>
+                                        <button className='primaryButton' type='submit' onClick={()=>handleDemote(scholar["id"])}> Demote </button>
                                     </td>
                                 </tr>
                             );

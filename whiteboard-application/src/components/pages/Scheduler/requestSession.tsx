@@ -199,7 +199,7 @@ const RequestSession: FC<RequestSessionProps> = (props) => {
                     onChange={(e)=>setMaxParticipants(e.target.value)}></input>
                 </div> : ""}
 
-                {sessionStorage.getItem("currentUserRole") == "admin" ? "TODO ADD SCHOLAR SELECT BECAUSE RIGHT NOW THE ADMIN IS ASSIGNED BY DEFAULT" : ""}
+                {/* {sessionStorage.getItem("currentUserRole") == "admin" ? "TODO ADD SCHOLAR SELECT BECAUSE RIGHT NOW THE ADMIN IS ASSIGNED BY DEFAULT" : ""} */}
                 <input type="submit" value="Submit" className="submit-button"/>
             </div>
             <Link to="/home"><div className="back-button">Back</div></Link>
