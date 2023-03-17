@@ -32,7 +32,7 @@ const reducer: Reducer<State, Action> = (state, action) => {
         if (action.canvas !== null && data !== null) {
           console.log('State is working')
           console.log(data);
-          action.canvas.loadFromJSON(data, function() {})
+          action.canvas.loadFromJSON(data, action.canvas.renderAll.bind(action.canvas));
         }
       });
 
