@@ -23,6 +23,7 @@ type WhiteboardProps = {
     const onClickCircle = () => dispatch({ type: "circle", toolType: "circle" });
     const onClickRectangle = () => dispatch({ type: "rectangle", toolType: "rectangle"});
     const onClickTextBox = () => dispatch({ type: "textbox", toolType: "textbox"});
+    const onClickImage = () => dispatch({ type: "image", toolType: "image"});
     const onSetColor = () => dispatch({ type: "setColor", color: '#FF0000' });
     const onClickClear = () => dispatch({ type: "clear" });
     const onClickDelete = () => dispatch({ type: "delete" });
@@ -49,9 +50,8 @@ type WhiteboardProps = {
       console.log("setting width to " + event.target.value)
       dispatch({ type: "setWidth", width: Number(event.target.value) })
       setSelected(event.target.value);
-    };
+    };   
 
-  
     return (
       <div className="toolbar">
 
@@ -69,11 +69,14 @@ type WhiteboardProps = {
           <ToggleButton value="Circle" onClick={onClickCircle}>Circle</ToggleButton>
           <ToggleButton value="Rectangle" onClick={onClickRectangle}>Rectangle</ToggleButton>
           <ToggleButton value="TextBox" onClick={onClickTextBox}>TextBox</ToggleButton>
+          <ToggleButton id="image-button" value="image" onClick={onClickImage}>Image</ToggleButton>
+          <input id="choose-file" type="file" accept="image/*"/>
           <ToggleButton value="Color" onClick={onSetColor}>TODO COLOR</ToggleButton>
           <ToggleButton value="Clear" onClick={onClickClear}>clear</ToggleButton>
         </ToggleButtonGroup>
 
         <Button id="delete-button" value="Delete" onClick={onClickDelete}>Delete</Button>
+        
 
         <FormControl>
           <Select value={selected} onChange={selectionChangeHandler}>
