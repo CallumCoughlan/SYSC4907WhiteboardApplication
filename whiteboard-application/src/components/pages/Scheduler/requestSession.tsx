@@ -93,8 +93,8 @@ const RequestSession: FC<RequestSessionProps> = (props) => {
         startStr = date + ' ' + startStr + ':00';
         endStr = date + ' ' + endStr + ':00';
         
-        var sessionType = props.role === "student" ? "private" : "public";
-        var sessionStatus = props.role === "student" ? "requested" : "created";
+        var sessionType = sessionStorage.getItem("currentUserRole") === "student" ? "private" : "public";
+        var sessionStatus = sessionStorage.getItem("currentUserRole") === "student" ? "requested" : "created";
 
         // const response = fetch('https://lit-river-91932.herokuapp.com/login', {
         //     method: 'GET',
