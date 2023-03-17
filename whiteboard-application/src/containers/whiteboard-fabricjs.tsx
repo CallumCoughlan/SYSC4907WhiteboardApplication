@@ -21,18 +21,15 @@ const reducer: Reducer<State, Action> = (state, action) => {
       action.canvas.freeDrawingBrush.width = state.width;
       action.canvas.freeDrawingBrush.color = state.color;
       action.canvas.isDrawingMode = true;
-      socket.on("whiteboard-data", function(data: JSON) {
-      console.log("We are here");
-        if (data === null) {
-          console.log("Its null");
-        }
-  
-        console.log(action.canvas);
+      socket.on("whiteboard-data", function(data: any) {
         // parse the data into the canvas
         if (action.canvas !== null && data !== null) {
           console.log('State is working')
           console.log(data);
-          action.canvas.loadFromJSON(data, function() {})
+          for (const object of data.objects) {
+            action.canvas.add(object);
+          }
+          action.canvas.renderAll();
         }
       });
 
