@@ -75,8 +75,11 @@ const SetAvailability: FC = () => {
     }
 
     return (
+        
         <form>
+            <h1 style={{margin: "auto"}} className='title'>Set the times at which you are unavailable</h1>
             <div className='set-availability-layout'>
+                
                 <div className='availability-form-container'>
                     <h3 className='form-title'>Weekly occurence</h3>
                     <label htmlFor="day-select">Select a day:</label>
