@@ -37,9 +37,49 @@ const SetAvailability: FC = () => {
         select?.removeAttribute("disabled")
     }
 
+    //function that is invoked on submit 
+    async function handleSubmit(event: React.MouseEvent<HTMLInputElement>, isWeekly: boolean) {
+        event.preventDefault();
+        console.log("setting availability...");
+        console.log("day: " + day);
+        console.log("date: " + date);
+        console.log("start time weekly: " + startTimeWeekly);
+        console.log("end time weekly: " + endTimeWeekly);
+        console.log("start time single: " + startTimeSingle);
+        console.log("end time single: " + endTimeSingle);
+
+        var reqBody;
+        if (isWeekly) {
+            reqBody = {
+                userID: "bob@cmail.carleton.ca",
+                day: day,
+                startTime: startTimeWeekly,
+                endTime: endTimeWeekly
+            }
+        } else {
+            reqBody = {
+                userID: "bob@cmail.carleton.ca",
+                date: date + "T10:00:00.000Z",
+                startTime: startTimeSingle,
+                endTime: endTimeSingle
+            }
+        }
+
+        fetch("https://lit-river-91932.herokuapp.com/availability", {
+        method: "POST",
+        body: JSON.stringify(reqBody),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+        })
+    }
+
     return (
+        
         <form>
+            <h1 style={{margin: "auto"}} className='title'>Set the times at which you are unavailable</h1>
             <div className='set-availability-layout'>
+                
                 <div className='availability-form-container'>
                     <h3 className='form-title'>Weekly occurence</h3>
                     <label htmlFor="day-select">Select a day:</label>
@@ -91,7 +131,7 @@ const SetAvailability: FC = () => {
                     <option value="16:00" disabled={isTimeInvalid("16:00", startTimeWeekly)} selected>16:00</option>
                     </select>
                     <br/>
-                    <input type="submit" value="Submit" id="weekly-submit" className="submit-button"/>
+                    <input type="submit" value="Submit" id="weekly-submit" className="submit-button" onClick={(e)=>handleSubmit(e, true)}/>
                 </div>
                 <div className='availability-form-container'>
                     <h3 className='form-title'>Single occurence</h3>
@@ -136,7 +176,7 @@ const SetAvailability: FC = () => {
                     <option value="16:00" disabled={isTimeInvalid("16:00", startTimeSingle)} selected>16:00</option>
                     </select>
                     <br/>
-                    <input type="submit" value="Submit" id="single-submit" className="submit-button"/>
+                    <input type="submit" value="Submit" id="single-submit" className="submit-button" onClick={(e)=>handleSubmit(e, false)}/>
                 </div>
             </div>
             <Link to="/home"><div className="back-button">Back</div></Link>

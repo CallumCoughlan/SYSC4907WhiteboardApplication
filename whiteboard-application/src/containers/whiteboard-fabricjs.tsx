@@ -712,7 +712,7 @@ function addCircleMouseListeners(state: State) {
       ry: 1,
       strokeWidth: state.width,
       stroke: 'blue',
-      fill: 'green'
+      fill: 'white'
     });
 
     state.canvas.add(circ);
@@ -790,7 +790,7 @@ function addRectangleMouseListeners(state: State) {
       height: pointer.y - origY,
       angle: 0,
       fill: 'rgba(0,0,0,0)',
-      stroke: 'cyan',
+      stroke: 'red',
       strokeWidth: state.width,
       transparentCorners: false,
     });

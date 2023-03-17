@@ -1,8 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './style.css'
-//import Axios from "axios";
-
+//import { globalVarEmail } from '../../pages/Whiteboard/loginForm';
 
 
 type RequestSessionProps = {
@@ -94,8 +93,8 @@ const RequestSession: FC<RequestSessionProps> = (props) => {
         startStr = date + ' ' + startStr + ':00';
         endStr = date + ' ' + endStr + ':00';
         
-        var sessionType = props.role === "student" ? "private" : "public";
-        var sessionStatus = props.role === "student" ? "requested" : "created";
+        var sessionType = sessionStorage.getItem("currentUserRole") === "student" ? "private" : "public";
+        var sessionStatus = sessionStorage.getItem("currentUserRole") === "student" ? "requested" : "created";
 
         // const response = fetch('https://lit-river-91932.herokuapp.com/login', {
         //     method: 'GET',
@@ -122,12 +121,15 @@ const RequestSession: FC<RequestSessionProps> = (props) => {
             numParticipants: maxParticipants,
             sessionType: sessionType,
             sessionStatus: sessionStatus,
-            userID: "bob@cmail.carleton.ca"
+            userID: sessionStorage.getItem("currentUserEmail") // this is the id of the scholar requesting a prvate session or the id of a scholar creating a public session
         }),
         headers: {
             "Content-type": "application/json; charset=UTF-8"
         }
         })
+        
+        var message = props.role === "student" ? "Private session request has been created" : "Public session has been created";
+        alert(message);
     }
 
     return (
@@ -182,14 +184,22 @@ const RequestSession: FC<RequestSessionProps> = (props) => {
                     <option value="MATH 1104">MATH 1104</option>
                 </select>
                 <br/>
-                <label htmlFor="description">Session description:</label>
-                <input value={description} type="text" id="description" name="description" className="form-item" placeholder="description"
-                 onChange={(e)=>setDescription(e.target.value)}></input>
-                <br/>
-                <label htmlFor="maxParticipants">Max participants:</label>
-                <input value={maxParticipants} type="number" id="maxParticipants" name="maxParticipants" className="form-item" min="2" max="50"
-                 onChange={(e)=>setMaxParticipants(e.target.value)}></input>
-                <br/>
+
+                {sessionStorage.getItem("currentUserRole") == "scholar" || sessionStorage.getItem("currentUserRole") == "admin" ?                 
+                <div>
+                    <label htmlFor="description">Session description:</label>
+                    <input value={description} type="text" id="description" name="description" className="form-item" placeholder="description"
+                    onChange={(e)=>setDescription(e.target.value)}></input>
+                </div> : ""}
+
+                {sessionStorage.getItem("currentUserRole") == "scholar" ?            
+                <div>
+                    <label htmlFor="maxParticipants">Max participants:</label>
+                    <input value={maxParticipants} type="number" id="maxParticipants" name="maxParticipants" className="form-item" min="2" max="50"
+                    onChange={(e)=>setMaxParticipants(e.target.value)}></input>
+                </div> : ""}
+
+                {/* {sessionStorage.getItem("currentUserRole") == "admin" ? "TODO ADD SCHOLAR SELECT BECAUSE RIGHT NOW THE ADMIN IS ASSIGNED BY DEFAULT" : ""} */}
                 <input type="submit" value="Submit" className="submit-button"/>
             </div>
             <Link to="/home"><div className="back-button">Back</div></Link>

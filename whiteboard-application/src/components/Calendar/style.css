@@ -9,20 +9,46 @@
     margin: auto;
 }
 
-.view-toggle-item {
+.view-toggle-item-weekly {
     display: inline;
     padding: 8px;
+    position: relative;
+    right: 5px;
+    background-color: rgb(204, 204, 204);
+    border-style: solid;
+    border-width: 1px;
+}
+
+.view-toggle-item-weekly:hover {
+    background-color: rgb(124, 124, 124);
+    
+}
+
+.view-toggle-item-monthly {
+    display: inline;
+    padding: 8px;
+    position: relative;
+    background-color: rgb(204, 204, 204);
+    border-style: solid;
+    border-width: 1px;
+}
+
+.view-toggle-item-monthly:hover {
+    background-color: rgb(124, 124, 124);
+    
 }
 
 .header-top-right {
     margin: auto 0px auto auto;
+    border-style: solid;
+    border-width: 1px;
 }
 
-.request-session-button {
+/* .request-session-button {
     padding: 8px;
     margin: 5px;
     background-color: lightblue;
-}
+} */
 
 .calendar {
     width: 80%;
@@ -87,24 +113,179 @@
     border-right: black 1px solid;
 }
 
-.public-div {
-    background-color: rgb(79, 195, 241);
+.public-non-registered-div {
+    background-color: rgb(154, 218, 243);
     border-top: black 1px solid;
     border-bottom: black 1px solid;
     font-size:100%;
+    height: 43px;
 }
 
-.public-div:hover {
+/* .public-non-registered-div:hover {
     background-color: rgb(60, 147, 182);
+} */
+
+.public-registered-div {
+    background-color: rgb(146, 247, 168);
+    border-top: black 1px solid;
+    border-bottom: black 1px solid;
+    font-size:100%;
+    height: 43px;
 }
+
+/* .public-registered-div:hover {
+    background-color: rgb(31, 192, 66);
+} */
+
 
 .private-div {
-    background-color: rgb(231, 160, 78);
+    background-color: rgb(245, 193, 134);
     border-top: black 1px solid;
     border-bottom: black 1px solid;
     font-size:100%;
+    height: 43px;
 }
 
-.private-div:hover {
+/* .private-div:hover {
     background-color: rgb(190, 128, 56);
+} */
+
+.register-button {
+    background-color: rgb(184, 255, 193);
+    border-top: black 1px solid;
+    border-bottom: black 1px solid;
+    position: relative;
+    left: 20px;
+    font-size:100%;
+}
+.register-button:hover {
+    background-color: rgb(126, 177, 133);
+    border-top: black 1px solid;
+    border-bottom: black 1px solid;
+    position: relative;
+    left: 20px;
+    font-size:100%;
+}
+
+.un-register-button {
+    background-color: rgb(255, 184, 184);
+    border-top: black 1px solid;
+    border-bottom: black 1px solid;
+    position: relative;
+    left: 20px;
+    font-size:100%;
+}
+
+.un-register-button:hover {
+    background-color: rgb(185, 133, 133);
+    border-top: black 1px solid;
+    border-bottom: black 1px solid;
+    position: relative;
+    left: 20px;
+    font-size:100%;
+}
+
+.wrapper .sidebar {
+    background: #e02d34;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 225px;
+    height: 100%;
+    padding: 20px 0;
+    transition: all 0.5s ease;
+}
+
+.wrapper .sidebar ul li {
+    display: block;
+    padding: 13px 30px;
+    border-bottom: 1px solid #e02d34;
+    color: rgb(255, 255, 255);
+    font-size: 18px;
+    font-weight: 600;
+    position: relative;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.wrapper .sidebar ul li:hover {
+    background:#bb2228;
+
+}
+
+.wrapper .mainMenu {
+    width: calc(100%-250px);
+    margin-left: 250px;
+    display: flex;
+    align-items: center;
+    padding: 20px 0px;
+}
+
+.wrapper .sidebar .cuLogo{
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.wrapper .sidebar .cuLogo img{
+    display: block;
+    margin: 0 auto;
+    width: 50%;
+    height: 50%;
+}
+
+.wrapper .sidebar .cuLogo h2{
+    color: #ffffff;
+    margin: 10px 0 5px;
+}
+
+.wrapper .logout {
+    position: absolute;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    border-radius: 8px;
+}
+
+.wrapper .content{
+    position: relative;
+    right: -100px;
+}
+
+.blue-square{
+    display:inline;
+    background-color: rgb(154, 218, 243);
+    padding-top: 4px;
+    padding-bottom: 7px;
+    padding-right: 30px;
+    padding-left: 2px;
+    border-style: groove;
+}
+
+.green-square{
+    display:inline;
+    background-color: rgb(146, 247, 168);
+    padding-top: 4px;
+    padding-bottom: 7px;
+    padding-right: 30px;
+    padding-left: 2px;
+    border-style: groove;
+}
+
+.orange-square{
+    display:inline;
+    background-color: rgb(245, 193, 134);
+    padding-top: 4px;
+    padding-bottom: 7px;
+    padding-right: 30px;
+    padding-left: 2px;
+    border-style: groove;
+}
+
+.legend{
+    padding-left: 15px;
 }
