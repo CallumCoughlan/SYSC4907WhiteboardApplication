@@ -21,7 +21,7 @@ const reducer: Reducer<State, Action> = (state, action) => {
       action.canvas.freeDrawingBrush.width = state.width;
       action.canvas.freeDrawingBrush.color = state.color;
       action.canvas.isDrawingMode = true;
-     socket.on("whiteboard-data", function(data: JSON) {
+      socket.on("whiteboard-data", function(data: JSON) {
       console.log("We are here");
         if (data === null) {
           console.log("Its null");
@@ -109,7 +109,7 @@ const reducer: Reducer<State, Action> = (state, action) => {
         state.canvas.isDrawingMode = isDrawingMode;
       }
 
-      const json = JSON.stringify(state.canvas);
+      const json = state.canvas.toJSON();
       socket.emit("whiteboard-data", json);
       return { ...state };
     }
@@ -367,7 +367,7 @@ const reducer: Reducer<State, Action> = (state, action) => {
 
       state.canvas.clear();
 
-      const json = JSON.stringify(state.canvas);
+      const json = state.canvas.toJSON();
       socket.emit("whiteboard-data", json);
       return state;
     }
@@ -390,7 +390,7 @@ const reducer: Reducer<State, Action> = (state, action) => {
       });
       state.canvas.discardActiveObject().renderAll();
 
-      const json = JSON.stringify(state.canvas);
+      const json = state.canvas.toJSON();
       socket.emit("whiteboard-data", json);
 
       return state;
@@ -605,7 +605,7 @@ function addArrowMouseListeners(state: State) {
     state.canvas.discardActiveObject();
     state.canvas.selection = true;
 
-    const json = JSON.stringify(state.canvas);
+    const json = state.canvas.toJSON();
     socket.emit("whiteboard-data", json);
   });
 }
@@ -682,7 +682,7 @@ function addCircleMouseListeners(state: State) {
     state.canvas.discardActiveObject();
     //state.canvas.selection = true;
 
-    const json = JSON.stringify(state.canvas);
+    const json = state.canvas.toJSON();
     socket.emit("whiteboard-data", json);
   });
 }
@@ -760,7 +760,7 @@ function addRectangleMouseListeners(state: State) {
     }
     isDown = false;
     state.canvas.discardActiveObject();
-    const json = JSON.stringify(state.canvas);
+    const json = state.canvas.toJSON();
     socket.emit("whiteboard-data", json);
   });
 }
@@ -831,7 +831,7 @@ function addTextBoxMouseListeners(state: State) {
     }
     isDown = false;
     state.canvas.discardActiveObject();
-    const json = JSON.stringify(state.canvas);
+    const json = state.canvas.toJSON();
     socket.emit("whiteboard-data", json);
   });
 }
