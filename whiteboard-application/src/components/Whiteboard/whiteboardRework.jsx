@@ -493,7 +493,7 @@ function addCircleMouseListeners() {
 
   return (
     <div className="WhiteBoard">
-      <div style={{margin: "0 auto"}}>
+      <div style={{margin: "0 auto", height: '5%'}}>
         <ButtonGroup
             color="primary"
             aria-label="Platform"

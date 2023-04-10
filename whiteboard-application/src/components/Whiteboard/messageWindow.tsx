@@ -46,7 +46,7 @@ const MessageBox = (props: MessageProps): ReactElement => {
   )
 
   return (
-    <div style={{overflowY: 'scroll', maxHeight: '33%', minHeight: '33%'}}>
+    <div style={{overflowY: 'scroll', maxHeight: '95%', minHeight: '95%', overflow: 'auto', marginLeft: '2%'}}>
       <ul>{messagesList}</ul>
     </div>
   )
@@ -56,7 +56,8 @@ const MessageWindow = (): ReactElement => {
   const [messages, setMessages] = useState<Message[]>([{text: "Message1"}, {text: "Message2"}]);
 
   return(
-    <div>
+    <div style={{marginTop: '3.2%', height: '103.2vh', borderRight: "solid", borderTop: 'solid', 
+    borderBottom: 'solid', display: 'flex', justifyContent: 'space-between', flexDirection: 'column'}}>
       <MessageBox messages={messages} />
       <MessageForm 
         onSubmitMessage={(newMessage: Message) => {
