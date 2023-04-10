@@ -105,6 +105,14 @@ const WhiteboardRework = () => {
       });
   }
 
+  const onKeyDown = (event) => {
+    if (event.key === "Delete") {
+      deleteObject();
+    }
+  }
+
+  document.addEventListener("keydown", onKeyDown, false);
+
   const toggleDraw = () => {
     editor.canvas.off('mouse:down').off('mouse:move').off('mouse:up');
     editor.canvas.isDrawingMode = true;
