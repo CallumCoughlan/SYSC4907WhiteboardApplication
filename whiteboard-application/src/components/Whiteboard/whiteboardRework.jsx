@@ -13,6 +13,8 @@ const WhiteboardRework = () => {
   const { editor, onReady } = useFabricJSEditor();
 
   const history = [];
+  let chooseFile = document.getElementById("choose-file");
+  if (chooseFile) { chooseFile.style.display = "none"};
   const [color, setColor] = useState("#35363a");
   const [width, setWidth] = useState("6");
 
@@ -372,6 +374,105 @@ function addCircleMouseListeners() {
     socket.emit("whiteboard-data", json);
   };
 
+  const addImage = () => {
+    //remove any previous listeners
+    editor.canvas.off('mouse:down').off('mouse:move').off('mouse:up');
+
+    //re-enable object selection
+    const allObjects = editor.canvas.getObjects();
+    allObjects.forEach((object) => {
+      object.selectable = true
+    });
+
+    //get out of drawing mode
+    editor.canvas.isDrawingMode = false;
+    
+    //add image mouse listeners on imageElement load
+    let imageElement = new Image()
+
+    imageElement.onload = function() {
+      console.log("image loaded")
+      addImageMouseListeners(imageElement)
+    }
+
+    imageElement.onerror = function() {
+      console.log("image failed to load")
+    }
+
+    if (chooseFile) { 
+      chooseFile.style.display = "inline"
+    
+      chooseFile.onchange = function(e) {
+        //@ts-ignore
+        let file = e.currentTarget.files[0];
+        let reader = new FileReader();
+
+        reader.onload = function() {
+
+          const url = reader.result;
+          imageElement.src = url;
+      }
+      reader.readAsDataURL(file)
+      }
+    }
+  }
+
+  function addImageMouseListeners(imageElement) {  
+    let image;
+    let isDown = false;
+    let origX = 0;
+    let origY = 0;
+  
+    editor.canvas.on('mouse:down', function (o) {
+      //temporarily disable object selection
+      const allObjects = editor.canvas.getObjects();
+      allObjects.forEach((object) => {
+        object.selectable = false
+      });
+      editor.canvas.selection = false;
+  
+      isDown = true;
+      let pointer = editor.canvas.getPointer(o.e);
+      origX = pointer.x;
+      origY = pointer.y;
+  
+      image = new fabric.Image(imageElement, {
+        left: origX,
+        top: origY,
+        originX: 'left',
+        originY: 'top',
+        width: pointer.x - origX,
+        height: pointer.y - origY,
+        angle: 0
+      });
+  
+      editor.canvas.add(image)
+    });
+    
+    editor.canvas.on('mouse:move', function (o) {
+      if (!isDown) return;
+      let pointer = editor.canvas.getPointer(o.e);
+  
+      if (origX > pointer.x) {
+        image.set({ left: Math.abs(pointer.x) });
+      }
+      if (origY > pointer.y) {
+        image.set({ top: Math.abs(pointer.y) });
+      }
+  
+      image.scaleToWidth(Math.abs(origX - pointer.x))
+      image.scaleToHeight(Math.abs(origY - pointer.y));
+  
+      editor.canvas.renderAll();
+    });
+    
+    editor.canvas.on('mouse:up', function (o) {
+      isDown = false;
+      const json = editor.canvas.toJSON();
+      socket.emit("whiteboard-data", json);
+    });
+  }
+
   useEffect(() => {
     if (!editor || !fabric) {
       return;
@@ -434,6 +535,8 @@ function addCircleMouseListeners() {
               <MenuItem value={10}>Width 5</MenuItem>
             </Select>
           </FormControl>
+          <Button id="image-button" value="image" onClick={addImage}>Image</Button>
+          <input id="choose-file" type="file" accept="image/*"/>
           <Button onClick={undo}>
             Undo
           </Button>
