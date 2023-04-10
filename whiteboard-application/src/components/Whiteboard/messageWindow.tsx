@@ -56,7 +56,7 @@ const MessageWindow = (): ReactElement => {
   const [messages, setMessages] = useState<Message[]>([{text: "Message1"}, {text: "Message2"}]);
 
   return(
-    <div style={{marginTop: '3.2%', height: '103.2vh', borderRight: "solid", borderTop: 'solid', 
+    <div style={{marginTop: '2.8%', height: '60vh', maxHeight: '60vh', borderRight: "solid", borderTop: 'solid', 
     borderBottom: 'solid', display: 'flex', justifyContent: 'space-between', flexDirection: 'column'}}>
       <MessageBox messages={messages} />
       <MessageForm 
