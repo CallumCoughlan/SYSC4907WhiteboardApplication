@@ -1,5 +1,4 @@
 import React, { FC, useState, ReactElement } from 'react';
-import { FabricCanvasContainer } from '../../containers';
 
 type Message = {
   text: String;
@@ -47,7 +46,7 @@ const MessageBox = (props: MessageProps): ReactElement => {
   )
 
   return (
-    <div>
+    <div style={{overflowY: 'scroll', maxHeight: '33%', minHeight: '33%'}}>
       <ul>{messagesList}</ul>
     </div>
   )
