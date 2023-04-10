@@ -20,50 +20,6 @@ const WhiteboardRework = () => {
     if (!editor || !fabric) {
       return;
     }
-
-    if (!editor.canvas.__eventListeners["mouse:down"]) {
-      editor.canvas.on("mouse:down", function (opt) {
-        let evt = opt.e;
-        if (evt.ctrlKey === true) {
-          this.isDragging = true;
-          this.selection = false;
-          this.lastPosX = evt.clientX;
-          this.lastPosY = evt.clientY;
-        }
-      });
-    }
-
-    if (!editor.canvas.__eventListeners["mouse:move"]) {
-      editor.canvas.on("mouse:move", function (opt) {
-        if (this.isDragging) {
-          let e = opt.e;
-          let vpt = this.viewportTransform;
-          vpt[4] += e.clientX - this.lastPosX;
-          vpt[5] += e.clientY - this.lastPosY;
-          this.requestRenderAll();
-          this.lastPosX = e.clientX;
-          this.lastPosY = e.clientY;
-        }
-      });
-    }
-
-    if (!editor.canvas.__eventListeners["mouse:up"]) {
-      editor.canvas.on("mouse:up", function (opt) {
-        this.setViewportTransform(this.viewportTransform);
-        this.isDragging = false;
-        const json = editor.canvas.toJSON();
-        socket.emit("whiteboard-data", json);
-        this.selection = true;
-      });
-    }
-
-    editor.canvas.renderAll();
-  }, [editor]);
-
-  useEffect(() => {
-    if (!editor || !fabric) {
-      return;
-    }
     editor.canvas.setHeight(1000);
     editor.canvas.setWidth(1500);
     editor.canvas.freeDrawingBrush.width = 6;
@@ -121,6 +77,8 @@ const WhiteboardRework = () => {
       allObjects.forEach((object) => {
         object.selectable = true
       });
+
+    addCursorListeners()
   };
 
   const undo = () => {
@@ -317,6 +275,8 @@ function addCircleMouseListeners() {
 
     let alltogetherObj = new fabric.Group(objs);
     editor.canvas.add(alltogetherObj);
+    const json = editor.canvas.toJSON();
+    socket.emit("whiteboard-data", json);
   };
 
   const onAddRectangle = () => {
