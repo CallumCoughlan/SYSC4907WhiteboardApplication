@@ -896,11 +896,9 @@ function addTextBoxMouseListeners(state: State) {
       return state;
     }
     isDown = false;
-<<<<<<< HEAD
     state.canvas.discardActiveObject();
     const json = state.canvas.toJSON();
     socket.emit("whiteboard-data", json);
-=======
   });
 }
 
@@ -972,7 +970,6 @@ function addImageMouseListeners(state: State, imageElement: HTMLImageElement) {
       return state;
     }
     isDown = false;
->>>>>>> main
   });
 }
 
