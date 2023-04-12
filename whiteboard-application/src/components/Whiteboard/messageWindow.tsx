@@ -1,5 +1,4 @@
 import React, { FC, useState, ReactElement } from 'react';
-import { FabricCanvasContainer } from '../../containers';
 
 type Message = {
   text: String;
@@ -47,7 +46,7 @@ const MessageBox = (props: MessageProps): ReactElement => {
   )
 
   return (
-    <div>
+    <div style={{overflowY: 'scroll', maxHeight: '95%', minHeight: '95%', overflow: 'auto', marginLeft: '2%'}}>
       <ul>{messagesList}</ul>
     </div>
   )
@@ -57,7 +56,8 @@ const MessageWindow = (): ReactElement => {
   const [messages, setMessages] = useState<Message[]>([{text: "Message1"}, {text: "Message2"}]);
 
   return(
-    <div>
+    <div style={{marginTop: '2.8%', height: '60vh', maxHeight: '60vh', borderRight: "solid", borderTop: 'solid', 
+    borderBottom: 'solid', display: 'flex', justifyContent: 'space-between', flexDirection: 'column'}}>
       <MessageBox messages={messages} />
       <MessageForm 
         onSubmitMessage={(newMessage: Message) => {

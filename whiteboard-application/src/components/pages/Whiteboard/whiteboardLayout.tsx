@@ -14,6 +14,7 @@ import { BrowserRouter as Router, Routes, Route,} from "react-router-dom";
 import Calendar from '../../Calendar/calendar';
 import RequestSession from '../Scheduler/requestSession';
 import SetAvailability from '../Scheduler/setAvailability';
+import WhiteboardRework from '../../Whiteboard/whiteboardRework';
 
 
 const WhiteboardLayout: FC = () => (
@@ -33,9 +34,8 @@ const WhiteboardLayout: FC = () => (
             <Route path="/adminStudentList" element={<AdminStudentList/>}/>
             <Route path="/whiteboard" element={
               <FabricCanvasContainer.Provider>
-                <Toolbar />
                 <Box display="flex">
-                  <Whiteboard />
+                  <WhiteboardRework />
                   <MessageWindow />
                 </Box>
               </FabricCanvasContainer.Provider>}/>

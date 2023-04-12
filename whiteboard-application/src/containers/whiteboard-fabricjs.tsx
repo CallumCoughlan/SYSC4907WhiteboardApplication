@@ -2,12 +2,9 @@ import { createContainer } from "unstated-next";
 import { Reducer, useReducer } from "react";
 import { fabric } from "fabric"
 import { State, Action } from "../types/whiteboard";
-import { blue } from "@mui/material/colors";
+const io = require('socket.io-client');
 
-
-
-
-var firstIter = true;
+const socket = io.connect("http://localhost:5001");
 const reducer: Reducer<State, Action> = (state, action) => {
   console.log("current tool:" + state.toolType)
 
@@ -16,7 +13,7 @@ const reducer: Reducer<State, Action> = (state, action) => {
 
   //todo, figure out why the reducer is being called twice
 
-  switch (action.type) {
+  switch (action.type) {  
 
     //======================================
     //        Case 1 initialization
@@ -27,11 +24,17 @@ const reducer: Reducer<State, Action> = (state, action) => {
       action.canvas.freeDrawingBrush.width = state.width;
       action.canvas.freeDrawingBrush.color = state.color;
       action.canvas.isDrawingMode = true;
-      fabric.Image.fromURL('https://i.stack.imgur.com/f6vGv.png', function(canvasBackground) {
-        canvasBackground.scaleToWidth(1500);
-        action.canvas.setBackgroundImage(canvasBackground, action.canvas.renderAll.bind(action.canvas));
-        action.canvas.requestRenderAll();
-     });
+      socket.on("whiteboard-data", function(data: any) {
+        // parse the data into the canvas
+        if (action.canvas !== null && data !== null) {
+          console.log('State is working')
+          console.log(data);
+          for (const object of data.objects) {
+            action.canvas.add(object);
+          }
+          action.canvas.renderAll();
+        }
+      });
 
       return { ...state, canvas: action.canvas };
     }
@@ -105,6 +108,9 @@ const reducer: Reducer<State, Action> = (state, action) => {
         state.isDrawingMode = isDrawingMode;
         state.canvas.isDrawingMode = isDrawingMode;
       }
+
+      const json = state.canvas.toJSON();
+      socket.emit("whiteboard-data", json);
       return { ...state };
     }
 
@@ -370,13 +376,13 @@ const reducer: Reducer<State, Action> = (state, action) => {
       }
 
       //add new mouse listeners for circle and rectangle with new width
-      if (state.toolType == "circle") {
+      if (state.toolType === "circle") {
         addCircleMouseListeners(state)
-      } else if (state.toolType == "rectangle") {
+      } else if (state.toolType === "rectangle") {
         addRectangleMouseListeners(state)
-      } else if (state.toolType == "line"){
+      } else if (state.toolType === "line"){
         addLineMouseListeners(state)
-      } else if (state.toolType == "arrow"){
+      } else if (state.toolType === "arrow"){
         addArrowMouseListeners(state)
       }
 
@@ -421,25 +427,9 @@ const reducer: Reducer<State, Action> = (state, action) => {
       });
 
       state.canvas.clear();
-      state.canvas.setBackgroundImage('https://i.stack.imgur.com/f6vGv.png', state.canvas.renderAll.bind(state.canvas), {
-        left: 10,
-        top: 10,
-        width: state.canvas.width,
-        height: state.canvas.height,
-        originX: 'left',
-        originY: 'top'
-      });
 
-      fabric.Image.fromURL('https://i.stack.imgur.com/f6vGv.png', function(canvasBackground) {
-        if (!state.canvas) {
-          return state;
-        }
-
-        canvasBackground.scaleToWidth(1500);
-        state.canvas.setBackgroundImage(canvasBackground, state.canvas.renderAll.bind(state.canvas));
-        state.canvas.requestRenderAll();
-     });
-
+      const json = state.canvas.toJSON();
+      socket.emit("whiteboard-data", json);
       return state;
     }
 
@@ -460,6 +450,9 @@ const reducer: Reducer<State, Action> = (state, action) => {
         state.canvas?.remove(object);
       });
       state.canvas.discardActiveObject().renderAll();
+
+      const json = state.canvas.toJSON();
+      socket.emit("whiteboard-data", json);
 
       return state;
     }
@@ -482,13 +475,13 @@ function addSelectionListeners(state: State) {
 
   //when an object on the canvas is selected, display the delete button
   state.canvas.on("selection:created", function() {
-    var deleteButton = document.getElementById("delete-button");
+    const deleteButton = document.getElementById("delete-button");
     if (deleteButton) { deleteButton.style.display = "inline"};
   });
 
   //when the selection of an object ends, hide the delete button
   state.canvas.on("selection:cleared", function() {
-    var deleteButton = document.getElementById("delete-button");
+    const deleteButton = document.getElementById("delete-button");
     if (deleteButton) { deleteButton.style.display = "none"};
   });
 }
@@ -500,10 +493,10 @@ function addLineMouseListeners(state: State) {
     return state;
   }
 
-  var line: fabric.Line;
-  var isDown = false;
-  var origX = 0;
-  var origY = 0;
+  let line: fabric.Line;
+  let isDown = false;
+  let origX = 0;
+  let origY = 0;
 
   state.canvas.on('mouse:down', function (o) {
     if (!state.canvas) {
@@ -518,7 +511,7 @@ function addLineMouseListeners(state: State) {
     state.canvas.selection = false;
 
     isDown = true;
-    var pointer = state.canvas.getPointer(o.e);
+    const pointer = state.canvas.getPointer(o.e);
     origX = pointer.x;
     origY = pointer.y;
     line = new fabric.Line([origX,origY,origX,origY],{
@@ -535,7 +528,7 @@ function addLineMouseListeners(state: State) {
     }
 
     if (!isDown) return;
-    var pointer = state.canvas.getPointer(o.e);
+    const pointer = state.canvas.getPointer(o.e);
 
     line.set({
       x2: pointer.x,
@@ -552,7 +545,8 @@ function addLineMouseListeners(state: State) {
     //state.canvas.discardActiveObject();
     state.canvas.selection = true;
 
-    //todo, send the new line to the server???
+    const json = state.canvas.toJSON();
+    socket.emit("whiteboard-data", json);
   });
 }
 
@@ -563,13 +557,13 @@ function addArrowMouseListeners(state: State) {
   if (!state.canvas) {
     return state;
   }
-  var objs: fabric.Line[] = []
-  var arrowBody: fabric.Line;
-  var arrowLeft: fabric.Line;
-  var arrowRight: fabric.Line;
-  var isDown = false;
-  var origX = 0;
-  var origY = 0;
+  let objs: fabric.Line[] = []
+  let arrowBody: fabric.Line;
+  let arrowLeft: fabric.Line;
+  let arrowRight: fabric.Line;
+  let isDown = false;
+  let origX = 0;
+  let origY = 0;
 
   state.canvas.on('mouse:down', function (o) {
     if (!state.canvas) {
@@ -584,7 +578,7 @@ function addArrowMouseListeners(state: State) {
     state.canvas.selection = false;
 
     isDown = true;
-    var pointer = state.canvas.getPointer(o.e);
+    const pointer = state.canvas.getPointer(o.e);
     origX = pointer.x;
     origY = pointer.y;
     arrowBody = new fabric.Line([origX,origY,origX,origY],{
@@ -617,16 +611,16 @@ function addArrowMouseListeners(state: State) {
     }
 
     if (!isDown) return;
-    var pointer = state.canvas.getPointer(o.e);
+    const pointer = state.canvas.getPointer(o.e);
 
     arrowBody.set({
       x2: pointer.x,
       y2: pointer.y
     })
 
-    var dx=pointer.x-origX;
-    var dy=pointer.y-origY;
-    var angle=Math.atan2(dy,dx);
+    const dx=pointer.x-origX;
+    const dy=pointer.y-origY;
+    const angle=Math.atan2(dy,dx);
 
     arrowLeft.set({
       x1: pointer.x,
@@ -652,8 +646,8 @@ function addArrowMouseListeners(state: State) {
     isDown = false;
 
     //group all the objects 
-    var pointer = state.canvas.getPointer(o.e);
-    var alltogetherObj = new fabric.Group(objs,{
+    const pointer = state.canvas.getPointer(o.e);
+    const alltogetherObj = new fabric.Group(objs,{
       top:pointer.y - (pointer.y - origY)/2,
       left:pointer.x - (pointer.x - origX)/2,
       originX:'center',
@@ -672,7 +666,8 @@ function addArrowMouseListeners(state: State) {
     state.canvas.discardActiveObject();
     state.canvas.selection = true;
 
-    //todo, send the new line to the server???
+    const json = state.canvas.toJSON();
+    socket.emit("whiteboard-data", json);
   });
 }
 
@@ -684,10 +679,10 @@ function addCircleMouseListeners(state: State) {
     return state;
   }
 
-  var circ: fabric.Ellipse;
-  var isDown = false;
-  var origX = 0;
-  var origY = 0;
+  let circ: fabric.Ellipse;
+  let isDown = false;
+  let origX = 0;
+  let origY = 0;
 
   state.canvas.on('mouse:down', function (o) {
     if (!state.canvas) {
@@ -701,7 +696,7 @@ function addCircleMouseListeners(state: State) {
     });
 
     isDown = true;
-    var pointer = state.canvas.getPointer(o.e);
+    const pointer = state.canvas.getPointer(o.e);
     origX = pointer.x;
     origY = pointer.y;
 
@@ -723,7 +718,7 @@ function addCircleMouseListeners(state: State) {
       return state;
     }
     if (!isDown) return;
-    var pointer = state.canvas.getPointer(o.e);
+    const pointer = state.canvas.getPointer(o.e);
 
     if (origX > pointer.x) {
       circ.set({ left: Math.abs(pointer.x) });
@@ -748,7 +743,8 @@ function addCircleMouseListeners(state: State) {
     state.canvas.discardActiveObject();
     //state.canvas.selection = true;
 
-    //todo, send the new circle to the server???
+    const json = state.canvas.toJSON();
+    socket.emit("whiteboard-data", json);
   });
 }
 
@@ -760,10 +756,10 @@ function addRectangleMouseListeners(state: State) {
     return state;
   }
 
-  var rect: fabric.Rect;
-  var isDown = false;
-  var origX = 0;
-  var origY = 0;
+  let rect: fabric.Rect;
+  let isDown = false;
+  let origX = 0;
+  let origY = 0;
 
   state.canvas.on('mouse:down', function (o) {
     if (!state.canvas) {
@@ -777,7 +773,7 @@ function addRectangleMouseListeners(state: State) {
     });
 
     isDown = true;
-    var pointer = state.canvas.getPointer(o.e);
+    const pointer = state.canvas.getPointer(o.e);
     origX = pointer.x;
     origY = pointer.y;
 
@@ -804,7 +800,7 @@ function addRectangleMouseListeners(state: State) {
     }
 
     if (!isDown) return;
-    var pointer = state.canvas.getPointer(o.e);
+    const pointer = state.canvas.getPointer(o.e);
 
     if (origX > pointer.x) {
       rect.set({ left: Math.abs(pointer.x) });
@@ -825,9 +821,8 @@ function addRectangleMouseListeners(state: State) {
     }
     isDown = false;
     state.canvas.discardActiveObject();
-    //state.canvas.selection = true;
-
-    //todo, send the new recangle to the server???
+    const json = state.canvas.toJSON();
+    socket.emit("whiteboard-data", json);
   });
 }
 
@@ -838,10 +833,10 @@ function addTextBoxMouseListeners(state: State) {
     return state;
   }
 
-  var textbox: fabric.Textbox;
-  var isDown = false;
-  var origX = 0;
-  var origY = 0;
+  let textbox: fabric.Textbox;
+  let isDown = false;
+  let origX = 0;
+  let origY = 0;
 
   state.canvas.on('mouse:down', function (o) {
     if (!state.canvas) {
@@ -855,7 +850,7 @@ function addTextBoxMouseListeners(state: State) {
     });
 
     isDown = true;
-    var pointer = state.canvas.getPointer(o.e);
+    const pointer = state.canvas.getPointer(o.e);
     origX = pointer.x;
     origY = pointer.y;
 
@@ -881,7 +876,7 @@ function addTextBoxMouseListeners(state: State) {
     }
 
     if (!isDown) return;
-    var pointer = state.canvas.getPointer(o.e);
+    const pointer = state.canvas.getPointer(o.e);
 
     if (origX > pointer.x) {
       textbox.set({ left: pointer.x });
@@ -901,6 +896,9 @@ function addTextBoxMouseListeners(state: State) {
       return state;
     }
     isDown = false;
+    state.canvas.discardActiveObject();
+    const json = state.canvas.toJSON();
+    socket.emit("whiteboard-data", json);
   });
 }
 
