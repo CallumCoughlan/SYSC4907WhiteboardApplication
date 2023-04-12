@@ -1,4 +1,7 @@
 import React, { FC, useState, ReactElement } from 'react';
+const io = require('socket.io-client');
+
+const socket = io.connect("http://localhost:5001");
 
 type Message = {
   text: String;
@@ -9,13 +12,18 @@ interface SubmitProps {
 }
 
 const MessageForm = (props: SubmitProps): ReactElement => {
-  const [newMessage, setNewMessage] = useState({text: ""});  
+  const [newMessage, setNewMessage] = useState({text: ""});
+
+  socket.on("message", function(data: Message) {
+    props.onSubmitMessage(data);
+  });
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     
     if (newMessage.text != "") {
       props.onSubmitMessage(newMessage);
+      socket.emit("message", newMessage);
       setNewMessage({text: ""});
     }
   }
