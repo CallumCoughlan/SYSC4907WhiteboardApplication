@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
@@ -40,7 +39,16 @@ function LoginForm() {
             setIncorrect("Email or password you've entered is incorrect.");
         }
     }
-    
+
+    function showPassword() {
+        var pw = document.getElementsByName('password')[0];
+        if ((pw as HTMLInputElement).type === 'password') {
+            (pw as HTMLInputElement).type = "text";
+        } else {
+            (pw as HTMLInputElement).type = "password";
+        }
+    }
+
     return (
         <div className='loginForm'>
             <div className='temp'>
@@ -50,7 +58,10 @@ function LoginForm() {
                     <div className='userIn'>
                         <div id='incorrectInput'>{incorrectInputs}</div>
                         <input type='text' className='form-control' name='email' placeholder='Carleton Email' onChange={e => setEmail(e.target.value)}></input>
-                        <input type='text' className='form-control' name='password' placeholder='Password' onChange={e => setPassword(e.target.value)}></input>
+                        <input type='password' className='form-control' name='password' placeholder='Password' onChange={e => setPassword(e.target.value)}></input>
+                    </div>
+                    <div id='showPW'>
+                        <input type="checkbox" onClick={e => showPassword()}/>Show Password
                     </div>
                     <button className='primaryButton' type='submit' onClick={handleSubmit}> Login </button>
                 </form>
