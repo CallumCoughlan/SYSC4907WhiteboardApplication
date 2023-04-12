@@ -15,8 +15,6 @@ var nonRegisteredPublicSessionInfoMap = new Map<string, string[]>();
 
 //fetches information of all session from server
 function fetchSessionInfo() {
-
-
     console.log("fetching session info for " + sessionStorage.getItem("currentUserEmail"));
     var jsonSessionInfo = null;
     const request = new XMLHttpRequest();
@@ -413,7 +411,13 @@ const Calendar: FC<CalendarProps> = (props) => {
         const sessionDivs: JSX.Element[] = [];
         const PublicRegisteredSessionField = ({ results }: { results: Array<String> }) => (
             <div className='public-registered-div'>
-                {results[0]}             
+                {results[0] + " "}
+                <Link to="/whiteboard">
+                    <button type="button">
+                        Join Session
+                    </button>
+                </Link>
+                 
                 <br></br>
                 {results[1]}
                 <button onClick={() => handleUnRegister(results[2])} className='un-register-button'>unregister</button>
@@ -422,7 +426,13 @@ const Calendar: FC<CalendarProps> = (props) => {
     
         const PublicNonRegisteredSessionField = ({ results }: { results: Array<String> }) => (
             <div className='public-non-registered-div'>
-                {results[0].slice(0,-9) + " public"}             
+                {results[0].slice(0,-9)  + "public "}
+                <Link to="/whiteboard">
+                    <button type="button">
+                        Join Session
+                    </button>
+                </Link>
+        
                 <br></br>
                 {results[1]}
                 <button onClick={() => handleRegister(results[2])} className='register-button'>register</button>
@@ -431,7 +441,13 @@ const Calendar: FC<CalendarProps> = (props) => {
 
         const PrivateSessionField = ({ results }: { results: Array<String> }) => (
             <div className='private-div'>
-                {results[0]}
+                {results[0] + " "}
+                <Link to="/whiteboard">
+                    <button type="button">
+                        Join Session
+                    </button>
+                </Link>
+        
                 <br></br>
                 {results[1]}
                 <button onClick={() => handleUnRegister(results[2])} className='un-register-button'>unregister</button>
