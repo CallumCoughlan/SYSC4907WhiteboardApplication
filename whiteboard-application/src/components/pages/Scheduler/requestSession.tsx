@@ -93,8 +93,8 @@ const RequestSession: FC<RequestSessionProps> = (props) => {
         startStr = date + ' ' + startStr + ':00';
         endStr = date + ' ' + endStr + ':00';
         
-        var sessionType = props.role === "student" ? "private" : "public";
-        var sessionStatus = props.role === "student" ? "requested" : "created";
+        var sessionType = sessionStorage.getItem("currentUserRole") === "student" ? "private" : "public";
+        var sessionStatus = sessionStorage.getItem("currentUserRole") === "student" ? "requested" : "created";
 
         // const response = fetch('https://lit-river-91932.herokuapp.com/login', {
         //     method: 'GET',
@@ -199,7 +199,7 @@ const RequestSession: FC<RequestSessionProps> = (props) => {
                     onChange={(e)=>setMaxParticipants(e.target.value)}></input>
                 </div> : ""}
 
-                {sessionStorage.getItem("currentUserRole") == "admin" ? "TODO ADD SCHOLAR SELECT BECAUSE RIGHT NOW THE ADMIN IS ASSIGNED BY DEFAULT" : ""}
+                {/* {sessionStorage.getItem("currentUserRole") == "admin" ? "TODO ADD SCHOLAR SELECT BECAUSE RIGHT NOW THE ADMIN IS ASSIGNED BY DEFAULT" : ""} */}
                 <input type="submit" value="Submit" className="submit-button"/>
             </div>
             <Link to="/home"><div className="back-button">Back</div></Link>

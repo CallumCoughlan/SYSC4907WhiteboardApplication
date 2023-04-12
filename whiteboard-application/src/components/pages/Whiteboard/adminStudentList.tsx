@@ -80,10 +80,10 @@ function AdminStudentList() {
                     <thead> 
                         <tr>
                             <th className='col1'>Student</th>
-                            <th className='col2'>Password</th>
-                            <th className='col3'>Promote To Scholar</th>
+                            {/* <th className='col2'>Password</th> */}
                             <th className='publicSessionsCol'>Public Sessions</th>
                             <th className='privateSessionsCol'>Private Sessions</th>
+                            <th className='col3'>Promote To Scholar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -93,10 +93,8 @@ function AdminStudentList() {
                             return (
                                 <tr>
                                     <td className='col1'>{student["id"]}</td>
-                                    <td className='col2'>{student["password"]}</td>
-                                    <td className='col3'>
-                                        <button className='primaryButton' type='submit' onClick={()=>handlePromote(student["id"])}> Promote </button>
-                                    </td>
+                                    {/* <td className='col2'>{student["password"]}</td> */}
+
                                     <td className='publicSessionsCol'>
                                         <table>
                                             <thead> 
@@ -122,6 +120,9 @@ function AdminStudentList() {
                                             </thead>
                                             {privateResults}
                                         </table>
+                                    </td>
+                                    <td className='col3'>
+                                        <button className='primaryButton' type='submit' onClick={()=>handlePromote(student["id"])}> Promote </button>
                                     </td>
                                 </tr>
                             );

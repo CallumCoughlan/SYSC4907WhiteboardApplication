@@ -44,6 +44,10 @@ export type Action =
     toolType?: string;
   }
   | {
+    type: "image";
+    toolType?: string;
+  }
+  | {
       type: "setWidth";
       width?: number;
   }
