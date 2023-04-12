@@ -11,6 +11,7 @@ const socket = io.connect("http://localhost:5001");
 
 const WhiteboardRework = () => {
   const { editor, onReady } = useFabricJSEditor();
+  const [imageUrl, setImageUrl] = useState(null);
 
   const history = [];
   let chooseFile = document.getElementById("choose-file");
@@ -389,6 +390,7 @@ function addCircleMouseListeners() {
     
     //add image mouse listeners on imageElement load
     let imageElement = new Image()
+    imageElement.src = imageUrl;
 
     imageElement.onload = function() {
       console.log("image loaded")
@@ -403,7 +405,7 @@ function addCircleMouseListeners() {
       chooseFile.style.display = "inline"
     
       chooseFile.onchange = function(e) {
-        //@ts-ignore
+
         let file = e.currentTarget.files[0];
         let reader = new FileReader();
 
@@ -411,6 +413,7 @@ function addCircleMouseListeners() {
 
           const url = reader.result;
           imageElement.src = url;
+          setImageUrl(url);
       }
       reader.readAsDataURL(file)
       }
