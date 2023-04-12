@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
@@ -14,6 +14,11 @@ function RegistrationForm() {
 
     async function handleSubmit(event: any) {
         event.preventDefault();
+        if (!email.includes('cmail.carleton.ca')) {
+            setIncorrect("Invalid email.");
+            return;
+        }
+
         if (password == confirmPwd) {
             const res = await fetch('https://lit-river-91932.herokuapp.com/login', {
                 method: "POST",
@@ -54,7 +59,7 @@ function RegistrationForm() {
                     <div className='title'> Register </div>
                     <div className='userIn'>
                         <div id='incorrectInput'>{incorrectInputs}</div>
-                        <input type='text' className='form-control' placeholder='Carleton Email' onChange={e => setEmail(e.target.value)}></input>
+                        <input type='email' className='form-control' placeholder='Carleton Email' onChange={e => setEmail(e.target.value)}></input>
                         <input type='text' className='form-control' placeholder='Password' onChange={e => setPassword(e.target.value)}></input>
                         <input type='text' className='form-control' placeholder='Confirm Password' onChange={e => setConfirm(e.target.value)}></input>
                     </div>

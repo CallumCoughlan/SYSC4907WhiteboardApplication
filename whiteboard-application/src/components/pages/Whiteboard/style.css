@@ -247,3 +247,14 @@ table, th, td {
     color: rgb(240, 0, 0);
     margin-bottom: 10px;
 }
+
+#showPW {
+    padding-bottom: 15px;
+    text-align: left;
+    padding-left: 78px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+#showPW > input {
+    accent-color: #e02d34;
+}

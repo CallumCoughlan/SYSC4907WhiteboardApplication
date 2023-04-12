@@ -422,7 +422,7 @@ const Calendar: FC<CalendarProps> = (props) => {
     
         const PublicNonRegisteredSessionField = ({ results }: { results: Array<String> }) => (
             <div className='public-non-registered-div'>
-                {results[0]}             
+                {results[0].slice(0,-9) + " public"}             
                 <br></br>
                 {results[1]}
                 <button onClick={() => handleRegister(results[2])} className='register-button'>register</button>
