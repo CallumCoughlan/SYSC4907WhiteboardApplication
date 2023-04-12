@@ -14,7 +14,7 @@ function RegistrationForm() {
 
     async function handleSubmit(event: any) {
         event.preventDefault();
-        if (!email.includes('cmail.carleton.ca')) {
+        if (!email.includes('@cmail.carleton.ca')) {
             setIncorrect("Invalid email.");
             return;
         }
